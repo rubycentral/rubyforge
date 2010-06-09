@@ -1,2 +1,180 @@
-Use this README file to introduce your application and point to useful places in the API for learning more.
-Run "rake doc:app" to generate API documentation for your models, controllers, helpers, and libraries.
+This repo is under my tcopeland account temporarily... soon we'll move it over to the rubycentral account and delete this repo.
+
+This is a port of the RubyForge codebase to Rails.  It's about time!
+
+Some plans:
+
+we'll migrate existing data over; e.g., we're not tied to current rubyforge schema
+TOM: post up a sanitized data dump
+- set all passwords to Digest::MD5.hexdigest("password") # <= 5f4dcc3b5aa765d61d8327deb882cf99
+- normalize all emails to user_1@example.org
+What domain data will we keep? (see table listing further down)
+- User
+- Membership
+- Group
+- Project
+
+
+$ psql -Ugforge gforge -c '\dt'
+                    List of relations
+ Schema |             Name              | Type  | Owner  
+--------+-------------------------------+-------+--------
+ public | activity_log                  | table | gforge
+ public | activity_log_old              | table | gforge
+ public | activity_log_old_old          | table | gforge
+ public | api_requests                  | table | gforge
+ public | artifact                      | table | gforge
+ public | artifact_canned_responses     | table | gforge
+ public | artifact_category             | table | gforge
+ public | artifact_counts_agg           | table | gforge
+ public | artifact_extra_field_data     | table | gforge
+ public | artifact_extra_field_elements | table | gforge
+ public | artifact_extra_field_list     | table | gforge
+ public | artifact_file                 | table | gforge
+ public | artifact_group                | table | gforge
+ public | artifact_group_list           | table | gforge
+ public | artifact_history              | table | gforge
+ public | artifact_message              | table | gforge
+ public | artifact_monitor              | table | gforge
+ public | artifact_perm                 | table | gforge
+ public | artifact_resolution           | table | gforge
+ public | artifact_status               | table | gforge
+ public | canned_responses              | table | gforge
+ public | country_code                  | table | gforge
+ public | cron_history                  | table | gforge
+ public | db_images                     | table | gforge
+ public | disk_usages                   | table | gforge
+ public | doc_data                      | table | gforge
+ public | doc_groups                    | table | gforge
+ public | doc_states                    | table | gforge
+ public | filemodule_monitor            | table | gforge
+ public | forum                         | table | gforge
+ public | forum_agg_msg_count           | table | gforge
+ public | forum_group_list              | table | gforge
+ public | forum_monitored_forums        | table | gforge
+ public | forum_perm                    | table | gforge
+ public | forum_saved_place             | table | gforge
+ public | frs_dlstats_file              | table | gforge
+ public | frs_dlstats_filetotal_agg     | table | gforge
+ public | frs_file                      | table | gforge
+ public | frs_filetype                  | table | gforge
+ public | frs_package                   | table | gforge
+ public | frs_processor                 | table | gforge
+ public | frs_release                   | table | gforge
+ public | frs_status                    | table | gforge
+ public | gem_downloads                 | table | gforge
+ public | gem_namespace_ownerships      | table | gforge
+ public | group_cvs_history             | table | gforge
+ public | group_history                 | table | gforge
+ public | group_plugin                  | table | gforge
+ public | groups                        | table | gforge
+ public | licenses                      | table | gforge
+ public | mail_group_list               | table | gforge
+ public | massmail_queue                | table | gforge
+ public | mirrors                       | table | gforge
+ public | news_bytes                    | table | gforge
+ public | people_job                    | table | gforge
+ public | people_job_category           | table | gforge
+ public | people_job_inventory          | table | gforge
+ public | people_job_status             | table | gforge
+ public | people_skill                  | table | gforge
+ public | people_skill_inventory        | table | gforge
+ public | people_skill_level            | table | gforge
+ public | people_skill_year             | table | gforge
+ public | plugins                       | table | gforge
+ public | prdb_dbs                      | table | gforge
+ public | prdb_states                   | table | gforge
+ public | prdb_types                    | table | gforge
+ public | project_assigned_to           | table | gforge
+ public | project_category              | table | gforge
+ public | project_counts_agg            | table | gforge
+ public | project_dependencies          | table | gforge
+ public | project_group_doccat          | table | gforge
+ public | project_group_forum           | table | gforge
+ public | project_group_list            | table | gforge
+ public | project_history               | table | gforge
+ public | project_messages              | table | gforge
+ public | project_metric                | table | gforge
+ public | project_metric_tmp1           | table | gforge
+ public | project_perm                  | table | gforge
+ public | project_status                | table | gforge
+ public | project_sums_agg              | table | gforge
+ public | project_task                  | table | gforge
+ public | project_task_artifact         | table | gforge
+ public | project_task_external_order   | table | gforge
+ public | project_weekly_metric         | table | gforge
+ public | prweb_vhost                   | table | gforge
+ public | rep_group_act_daily           | table | gforge
+ public | rep_group_act_monthly         | table | gforge
+ public | rep_group_act_weekly          | table | gforge
+ public | rep_groups_added_daily        | table | gforge
+ public | rep_groups_added_monthly      | table | gforge
+ public | rep_groups_added_weekly       | table | gforge
+ public | rep_groups_cum_daily          | table | gforge
+ public | rep_groups_cum_monthly        | table | gforge
+ public | rep_groups_cum_weekly         | table | gforge
+ public | rep_time_category             | table | gforge
+ public | rep_time_tracking             | table | gforge
+ public | rep_user_act_daily            | table | gforge
+ public | rep_user_act_monthly          | table | gforge
+ public | rep_user_act_weekly           | table | gforge
+ public | rep_users_added_daily         | table | gforge
+ public | rep_users_added_monthly       | table | gforge
+ public | rep_users_added_weekly        | table | gforge
+ public | rep_users_cum_daily           | table | gforge
+ public | rep_users_cum_monthly         | table | gforge
+ public | rep_users_cum_weekly          | table | gforge
+ public | role                          | table | gforge
+ public | role_setting                  | table | gforge
+ public | schema_migrations             | table | gforge
+ public | skills_data                   | table | gforge
+ public | skills_data_types             | table | gforge
+ public | snippet                       | table | gforge
+ public | snippet_package               | table | gforge
+ public | snippet_package_item          | table | gforge
+ public | snippet_package_version       | table | gforge
+ public | snippet_version               | table | gforge
+ public | stats_agg_logo_by_day         | table | gforge
+ public | stats_agg_logo_by_group       | table | gforge
+ public | stats_agg_pages_by_day        | table | gforge
+ public | stats_agg_site_by_group       | table | gforge
+ public | stats_cvs_group               | table | gforge
+ public | stats_cvs_user                | table | gforge
+ public | stats_project                 | table | gforge
+ public | stats_project_developers      | table | gforge
+ public | stats_project_metric          | table | gforge
+ public | stats_project_months          | table | gforge
+ public | stats_site                    | table | gforge
+ public | stats_site_months             | table | gforge
+ public | stats_site_pages_by_day       | table | gforge
+ public | stats_site_pages_by_month     | table | gforge
+ public | stats_subd_pages              | table | gforge
+ public | supported_languages           | table | gforge
+ public | survey_question_types         | table | gforge
+ public | survey_questions              | table | gforge
+ public | survey_rating_aggregate       | table | gforge
+ public | survey_rating_response        | table | gforge
+ public | survey_responses              | table | gforge
+ public | surveys                       | table | gforge
+ public | themes                        | table | gforge
+ public | trove_agg                     | table | gforge
+ public | trove_cat                     | table | gforge
+ public | trove_group_link              | table | gforge
+ public | trove_treesums                | table | gforge
+ public | user_bookmarks                | table | gforge
+ public | user_diary                    | table | gforge
+ public | user_diary_monitor            | table | gforge
+ public | user_group                    | table | gforge
+ public | user_metric                   | table | gforge
+ public | user_metric0                  | table | gforge
+ public | user_metric_history           | table | gforge
+ public | user_plugin                   | table | gforge
+ public | user_preferences              | table | gforge
+ public | user_ratings                  | table | gforge
+ public | user_session                  | table | gforge
+ public | user_type                     | table | gforge
+ public | users                         | table | gforge
+(155 rows)
+
+
+
