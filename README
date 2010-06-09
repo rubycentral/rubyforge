@@ -13,6 +13,13 @@ What domain data will we keep? (see table listing further down)
 - Membership
 - Group
 - Project
+- Forum
+- Message
+- NewsByte (would be good to decouple this from Forums)
+- MailingList
+- Tracker (currently this is artifact)
+- TrackerItem
+- Role
 
 
 $ psql -Ugforge gforge -c '\dt'
