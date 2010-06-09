@@ -21,6 +21,9 @@ What domain data will we keep? (see table listing further down)
 - TrackerItem
 - Role
 
+Architecture:
+Apache, Rails, Memcached, Redis, Resque, PostgreSQL
+
 
 $ psql -Ugforge gforge -c '\dt'
                     List of relations
