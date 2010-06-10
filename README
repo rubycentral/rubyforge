@@ -3,7 +3,7 @@ This is a port of the RubyForge codebase to Rails.  It's about time!
 Some plans:
 
 we'll migrate existing data over; e.g., we're not tied to current rubyforge schema
-What domain data will we keep? (see table listing further down)
+What domain data will we keep? (see table listing in doc/rubyforge_tables.txt)
 - User
 - Membership
 - Group
