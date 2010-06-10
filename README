@@ -75,7 +75,6 @@ $ psql -Ugforge gforge -c '\dt'
  public | licenses                      | table | gforge
  public | mail_group_list               | table | gforge
  public | massmail_queue                | table | gforge
- public | mirrors                       | table | gforge
  public | news_bytes                    | table | gforge
  public | people_job                    | table | gforge
  public | people_job_category           | table | gforge
@@ -178,8 +177,3 @@ $ psql -Ugforge gforge -c '\dt'
  public | user_session                  | table | gforge
  public | user_type                     | table | gforge
  public | users                         | table | gforge
-(155 rows)
-
-
-
-
