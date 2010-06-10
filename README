@@ -1,20 +1,33 @@
 This is a port of the RubyForge codebase to Rails.  It's about time!
 
-Some plans:
+We'll migrate existing data over; e.g., we're not tied to current rubyforge schema
 
-we'll migrate existing data over; e.g., we're not tied to current rubyforge schema
 What domain data will we keep? (see table listing in doc/rubyforge_tables.txt)
-- User
-- Membership
-- Group
-- Project
-- Forum
-- Message
-- NewsByte (would be good to decouple this from Forums)
-- MailingList
-- Tracker (currently this is artifact)
-- TrackerItem
-- Role
+User
+Membership
+Group
+Project
+Forum
+Message
+NewsByte (would be good to decouple this from Forums)
+MailingList
+Tracker (currently this is artifact)
+TrackerCannedResponse
+TrackerCategory
+TrackerCountsAgg
+
+TrackerItem
+Role
+FrsPackage
+FrsRelease
+FrsFile
+Trove
+
+Leave behind (?)
+ApiRequests
+ActivityLog
+Mirror
+
 
 Architecture:
 Apache, Rails, Memcached, Redis, Resque, PostgreSQL
