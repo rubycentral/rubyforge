@@ -67,7 +67,6 @@ $ psql -Ugforge gforge -c '\dt'
  public | frs_processor                 | table | gforge
  public | frs_release                   | table | gforge
  public | frs_status                    | table | gforge
- public | gem_downloads                 | table | gforge
  public | gem_namespace_ownerships      | table | gforge
  public | group_cvs_history             | table | gforge
  public | group_history                 | table | gforge
