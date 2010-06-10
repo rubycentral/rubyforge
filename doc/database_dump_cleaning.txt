@@ -1,0 +1,5 @@
+psql -U gforge gforge
+
+update users set user_pw = '5f4dcc3b5aa765d61d8327deb882cf99';
+update users set unix_pw = '';
+update users set email = ('user' || user_id || '@example.org');

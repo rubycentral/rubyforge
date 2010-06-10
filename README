@@ -5,9 +5,6 @@ This is a port of the RubyForge codebase to Rails.  It's about time!
 Some plans:
 
 we'll migrate existing data over; e.g., we're not tied to current rubyforge schema
-TOM: post up a sanitized data dump
-- set all passwords to Digest::MD5.hexdigest("password") # <= 5f4dcc3b5aa765d61d8327deb882cf99
-- normalize all emails to user_1@example.org
 What domain data will we keep? (see table listing further down)
 - User
 - Membership
@@ -185,6 +182,7 @@ $ psql -Ugforge gforge -c '\dt'
  public | user_type                     | table | gforge
  public | users                         | table | gforge
 (155 rows)
+
 
 
 
