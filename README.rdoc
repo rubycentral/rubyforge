@@ -1,4 +1,6 @@
-= This is the Redmine 0.9.4 release with changes to make it work for RubyForge
+= Moving RubyForge to Redmine
+
+This is the Redmine 0.9.4 release with changes to make it work for RubyForge
 
 Stuff we need to do:
 
