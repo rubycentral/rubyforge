@@ -1,0 +1,7 @@
+= This is the Redmine 0.9.4 release with changes to make it work for RubyForge
+
+Stuff we need to do:
+
+Implement a migration script - 
+Implement mailing list management
+Ensure crons work
