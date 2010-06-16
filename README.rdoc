@@ -2,6 +2,6 @@
 
 Stuff we need to do:
 
-Implement a migration script - see lib/tasks/migrate_from_gforge.rake
-Implement mailing list management
-Ensure crons work
+* Implement a migration script - see lib/tasks/migrate_from_gforge.rake
+* Implement mailing list management
+* Ensure crons work
