@@ -10,7 +10,7 @@ Stuff we need to do:
 
 == Migration
 
-I'm thinking about running the migration one project at a time.  So the script gets a GForgeGroup, creates a Project, finds the GForgeGroup users, creates them if necessary, etc.  My hope here is that once we've completely done one project, the rest will run relatively smoothly, with only some edge cases to account for.
+I'm thinking about running the migration one project at a time.  So the script gets a GForgeGroup, creates a Project, finds the associated GForgeUsers, creates them if necessary, etc.  My hope here is that once we've completely done one project, the rest will run relatively smoothly, with only some edge cases to account for.
 
 * see lib/tasks/migrate_from_gforge.rake
 * To run it: rake redmine:migrate_from_gforge REDMINE_LANG=en
