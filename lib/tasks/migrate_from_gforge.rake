@@ -35,7 +35,6 @@ namespace :redmine do
   def create_or_fetch_user(gforge_user)
     # status is active by default, admin is false by default
     # TODO what is redmine identity_url?
-    # TODO map over language selection
     # TODO what about authorized_keys?
     # TODO map over timezone selection
     # TODO does mail_siteupdates map to mail_notification?
@@ -50,6 +49,7 @@ namespace :redmine do
       :created_on => Time.at(gforge_user.add_date),
       :type => "User"
       )
+      user.language = gforge_user.supported_language.language_code if gforge_user.language
       user.login = gforge_user.user_name
       user.save!
     end
@@ -82,12 +82,17 @@ module GForgeMigrate
     has_many :user_group, :class_name => 'GForgeUserGroup', :foreign_key => 'user_id'
     has_many :artifacts, :foreign_key => 'submitted_by'
     has_many :groups, :through => :user_group
-    belongs_to :supported_language, :foreign_key => 'language'
+    belongs_to :supported_language, :foreign_key => 'language', :class_name => "GForgeSupportedLanguage"
     belongs_to :user_type, :foreign_key => 'type_id'
     has_many :forum_messages, :class_name => "Forum", :foreign_key => "posted_by"
     has_many :news_bytes, :foreign_key => "submitted_by"
     named_scope :active, :conditions => {:status => "A"}
   end
+  class GForgeSupportedLanguage < GForgeTable
+    set_primary_key 'language_id'
+    set_table_name 'supported_languages'
+  end
+  
 end
 # include GForgeMigrate
 # GForgeGroup.first.user_group.first.user
