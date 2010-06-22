@@ -18,6 +18,6 @@ I'm thinking about running the migration one project at a time.  So the script g
 So far the script migrates:
 
 GForgeGroup => Project
-GForgeUser => User
+GForgeUser => User, UserPreferences
 
 

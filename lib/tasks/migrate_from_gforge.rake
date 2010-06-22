@@ -36,7 +36,6 @@ namespace :redmine do
     # status is active by default, admin is false by default
     # TODO what is redmine identity_url?
     # TODO what about authorized_keys?
-    # TODO map over timezone selection
     # TODO does mail_siteupdates map to mail_notification?
     if user = User.find_by_mail(gforge_user.email) 
       user
@@ -52,6 +51,10 @@ namespace :redmine do
       user.language = gforge_user.supported_language.language_code if gforge_user.language
       user.login = gforge_user.user_name
       user.save!
+      # GForge records time zone in users.timezone in the format "US/Eastern"
+      # Redmine has it in user_preferences.time_zone in the format "Eastern Time (US & Canada)"
+      user.preference = UserPreference.create!(:user => user, :hide_mail => true, :time_zone => gforge_user.timezone)
+      user
     end
   end
   
