@@ -2,7 +2,13 @@ require 'active_record'
 
 namespace :redmine do
 
-  task :migrate_from_gforge => [:environment, 'db:migrate:reset', 'redmine:load_default_data'] do 
+  task :create_anonymous_user => :environment do
+    user = AnonymousUser.new(:firstname => "Anonymous", :lastname => "User", :mail => "anonymous@example.org", :type => "AnonymousUser")
+    user.login = "anonymous"
+    user.save!
+  end
+  
+  task :migrate_from_gforge => [:environment, 'db:migrate:reset', 'redmine:load_default_data', 'redmine:create_anonymous_user'] do 
     include GForgeMigrate
     Project.reset_column_information
     Project.transaction do 
@@ -17,7 +23,7 @@ namespace :redmine do
         end
         Project.create!(:name => gforge_group.group_name[0..29], :created_on => Time.at(gforge_group.register_time), :homepage => (gforge_group.homepage[0..254] rescue ""), :identifier => gforge_group.unix_group_name)
         gforge_group.user_group.each do |user_group|
-          # create User if not exists
+          user = create_or_fetch_user(user_group.user)
           # create Member
           # what's a Principal?  An admin?
         end
@@ -25,6 +31,30 @@ namespace :redmine do
       end
     end
   end
+  
+  def create_or_fetch_user(gforge_user)
+    # status is active by default, admin is false by default
+    # TODO what is redmine identity_url?
+    # TODO map over language selection
+    # TODO what about authorized_keys?
+    # TODO map over timezone selection
+    # TODO does mail_siteupdates map to mail_notification?
+    if user = User.find_by_mail(gforge_user.email) 
+      user
+    else
+      user = User.new(
+      :mail => gforge_user.email, 
+      :hashed_password => gforge_user.user_pw, 
+      :firstname => (gforge_user.realname.split(" ")[0] rescue gforge_user.realname), 
+      :lastname => (gforge_user.realname.split(" ")[1] rescue ""),
+      :created_on => Time.at(gforge_user.add_date),
+      :type => "User"
+      )
+      user.login = gforge_user.user_name
+      user.save!
+    end
+  end
+  
 
 end
 
