@@ -8,11 +8,11 @@ namespace :redmine do
     user.save!
   end
   
-  task :migrate_from_gforge => [:environment, 'db:migrate:reset', 'redmine:load_default_data', 'redmine:create_anonymous_user'] do 
+  # TODO I bet there's some way to be able to run rake db:reset:migrate as a dependency here... but when I do
+  # that, the Roles all have blank permission attribute.  I added a Role.reset_column_information to no avail... what am I missing here?
+  task :migrate_from_gforge => [:environment, 'redmine:load_default_data', 'redmine:create_anonymous_user'] do 
     include GForgeMigrate
-    Project.reset_column_information
     Project.transaction do 
-      puts "Migrating groups to projects"
       count = GForgeGroup.non_system.active.count
       GForgeGroup.non_system.active.each_with_index do |gforge_group, idx|
         puts "Creating Project from Group #{gforge_group.unix_group_name} (group_id #{gforge_group.group_id}) (#{idx+1} of #{count})"
@@ -24,9 +24,13 @@ namespace :redmine do
         project = Project.create!(:name => gforge_group.group_name[0..29], :created_on => Time.at(gforge_group.register_time), :homepage => (gforge_group.homepage[0..254] rescue ""), :identifier => gforge_group.unix_group_name)
         gforge_group.user_group.each do |user_group|
           user = create_or_fetch_user(user_group.user)
-          Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Manager").id])
+          if user_group.group_admin?
+            Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Manager").id])
+          else
+            Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Developer").id])
+          end
         end
-        break
+        break if Project.count > 10
       end
     end
   end
@@ -73,6 +77,9 @@ module GForgeMigrate
     set_primary_key 'user_group_id'
     belongs_to :user, :class_name => "GForgeUser", :foreign_key => 'user_id'
     belongs_to :group, :class_name => 'GForgeGroup'
+    def group_admin?
+      admin_flags.strip == 'A'
+    end
   end
   class GForgeUser < GForgeTable
     set_table_name 'users'
