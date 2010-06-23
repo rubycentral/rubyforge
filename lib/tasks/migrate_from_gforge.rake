@@ -21,11 +21,10 @@ namespace :redmine do
           gforge_group.group_name = gforge_group.group_name[0..20] + gforge_group.group_id.to_s
           puts "Set gforge_group.group_name to #{gforge_group.group_name}"
         end
-        Project.create!(:name => gforge_group.group_name[0..29], :created_on => Time.at(gforge_group.register_time), :homepage => (gforge_group.homepage[0..254] rescue ""), :identifier => gforge_group.unix_group_name)
+        project = Project.create!(:name => gforge_group.group_name[0..29], :created_on => Time.at(gforge_group.register_time), :homepage => (gforge_group.homepage[0..254] rescue ""), :identifier => gforge_group.unix_group_name)
         gforge_group.user_group.each do |user_group|
           user = create_or_fetch_user(user_group.user)
-          # create Member
-          # what's a Principal?  An admin?
+          Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Manager").id])
         end
         break
       end
