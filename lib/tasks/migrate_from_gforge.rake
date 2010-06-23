@@ -8,9 +8,13 @@ namespace :redmine do
     user.save!
   end
   
+  task :gforge_migration_default_data => :environment do
+    Tracker.create!(:name => "Patch", :is_in_chlog => true, :is_in_roadmap => false)
+  end
+  
   # TODO I bet there's some way to be able to run rake db:reset:migrate as a dependency here... but when I do
   # that, the Roles all have blank permission attribute.  I added a Role.reset_column_information to no avail... what am I missing here?
-  task :migrate_from_gforge => [:environment, 'redmine:load_default_data', 'redmine:create_anonymous_user'] do 
+  task :migrate_from_gforge => [:environment, 'redmine:load_default_data', 'redmine:gforge_migration_default_data', 'redmine:create_anonymous_user'] do 
     include GForgeMigrate
     Project.transaction do 
       count = GForgeGroup.non_system.active.count
@@ -29,6 +33,9 @@ namespace :redmine do
           else
             Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Developer").id])
           end
+        end
+        gforge_group.trackers.each do |tracker|
+          # Issue.new(:tracker => Tracker.find_by_name(tracker.name)
         end
         break if Project.count > 10
       end
@@ -69,6 +76,7 @@ module GForgeMigrate
     set_primary_key 'group_id'
     has_many :user_group, :class_name => 'GForgeUserGroup', :foreign_key => 'group_id'
     has_many :users, :through => :user_group
+    has_many :trackers, :class_name => "GForgeArtifactGroup", :foreign_key => 'group_id'
     named_scope :active, :conditions => {:status => 'A'}
     named_scope :non_system, :conditions => 'group_id > 4'
   end 
@@ -96,6 +104,11 @@ module GForgeMigrate
   class GForgeSupportedLanguage < GForgeTable
     set_primary_key 'language_id'
     set_table_name 'supported_languages'
+  end
+  class GForgeArtifactGroup < GForgeTable
+    set_primary_key 'group_artifact_id'
+    set_table_name 'artifact_group_list'
+    belongs_to :group, :class_name => 'GForgeGroup', :foreign_key => 'group_id'
   end
   
 end
