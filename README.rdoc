@@ -14,11 +14,23 @@ I'm thinking about running the migration one project at a time.  So the script g
 
 * see lib/tasks/migrate_from_gforge.rake
 * To run it: rake db:migrate:reset && rake redmine:migrate_from_gforge REDMINE_LANG=en
+* You can look at both object models in the same Ruby process like this:
 
-So far the script migrates:
+$ ./script/console
+Loading development environment (Rails 2.3.5)
+>> require 'lib/tasks/gforge_models.rb' ; include GForgeMigrate
+=> Object
+>> GForgeGroup.count
+=> 8821
+>> Project.count
+=> 11
+>> 
 
-* Group => Project
-* User => User, UserPreferences
-* UserGroup => Member, MemberRole, Principal
+Some notes on the differences between the GForge and the Redmine object models:
+
+* The GForge groups table gets mapped into the Redmine projects table.
+* The GForge users table gets mapped into the Redmine users table and user_preferences table. 
+ * GForge stores the user language setting as a foreign key into the supported_languages table.  Redmine stores it as a two letter string (e.g., 'en') in users.language.
+* The GForge user_group table gets mapped into the Redmine members table and member_roles table.
 
 

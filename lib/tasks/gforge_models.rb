@@ -42,11 +42,17 @@ module GForgeMigrate
     set_table_name 'artifact_group_list'
     belongs_to :group, :class_name => 'GForgeGroup', :foreign_key => 'group_id'
     has_many :artifacts, :class_name => "GForgeArtifact", :foreign_key => 'artifact_group_id'
+    # FIXME
+    # def redmine_tracker_name
+    #   case name
+    #     when ""
+    #   end
+    # end
   end
   class GForgeArtifact < GForgeTable
     set_table_name 'artifact'
     set_primary_key 'artifact_id'
-    belongs_to :tracker, :class_name => "GForgeArtifactGroupList", :foreign_key => 'artifact_group_id'
+    belongs_to :tracker, :class_name => "GForgeArtifactGroup", :foreign_key => 'artifact_group_id'
   end
   
 end
