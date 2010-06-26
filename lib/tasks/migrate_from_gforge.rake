@@ -69,18 +69,7 @@ namespace :redmine do
     if user = User.find_by_mail(gforge_user.email) 
       user
     else
-      user = User.new(:mail => gforge_user.email, :created_on => Time.at(gforge_user.add_date))
-      user.firstname = gforge_user.firstname.blank? ? "None" : gforge_user.firstname[0..29]
-      user.lastname = gforge_user.lastname.blank? ? "None" : gforge_user.lastname[0..29]
-      user.type = "User"
-      user.hashed_password = gforge_user.user_pw
-      user.language = gforge_user.supported_language.language_code if gforge_user.language
-      user.login = gforge_user.user_name
-      user.save!
-      # TODO GForge records time zone in users.timezone in the format "US/Eastern"
-      # Redmine has it in user_preferences.time_zone in the format "Eastern Time (US & Canada)"
-      user.preference = UserPreference.create!(:user => user, :hide_mail => true, :time_zone => gforge_user.timezone, :others => {:public_keys => gforge_user.authorized_keys})
-      user
+      gforge_user.convert_to_redmine_user
     end
   end
   

@@ -27,6 +27,15 @@ Loading development environment (Rails 2.3.5)
 => 11
 >> 
 
+I found it helpful to add this to my ~/.railsrc:
+
+if `pwd` =~ %r{Users/tom/github/rubyforge}
+  require 'active_record'
+  require 'lib/tasks/gforge_models.rb' ; include GForgeMigrate
+end
+
+That way I don't have to type that require every time I get into script/console to troubleshoot a migration failure.
+
 Some notes on the differences between the GForge and the Redmine object models:
 
 * The GForge groups table gets mapped into the Redmine projects table.
