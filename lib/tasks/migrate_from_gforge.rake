@@ -10,14 +10,14 @@ namespace :redmine do
   
   task :gforge_migration_default_data => :environment do
     Tracker.create!(:name => "Patch", :is_in_chlog => true, :is_in_roadmap => false)
+    @saved_notified_events = Setting.notified_events
+    Setting.notified_events.clear
   end
   
   # TODO I bet there's some way to be able to run rake db:reset:migrate as a dependency here... but when I do
   # that, the Roles all have blank permission attribute.  I added a Role.reset_column_information to no avail... what am I missing here?
   task :migrate_from_gforge => [:environment, 'redmine:load_default_data', 'redmine:gforge_migration_default_data', 'redmine:create_anonymous_user'] do 
     include GForgeMigrate
-    saved_notified_events = Setting.notified_events
-    Setting.notified_events.clear
     Project.transaction do 
       count = GForgeGroup.non_system.active.count
       GForgeGroup.non_system.active.each_with_index do |gforge_group, idx|
@@ -54,7 +54,7 @@ namespace :redmine do
         break if Project.count > 10
       end
     end
-    Setting.notified_events = saved_notified_events
+    Setting.notified_events = @saved_notified_events
   end
   
   def create_or_fetch_user(gforge_user)
