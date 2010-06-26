@@ -43,7 +43,11 @@ module GForgeMigrate
       user.type = "User"
       user.hashed_password = user_pw
       user.language = supported_language.language_code if language
-      user.login = user_name
+      if User.exists?(:login => user_name)
+        user.login = "#{user_name}_#{id}"
+      else
+        user.login = user_name
+      end
       user.save!
       # TODO GForge records time zone in users.timezone in the format "US/Eastern"
       # Redmine has it in user_preferences.time_zone in the format "Eastern Time (US & Canada)"
