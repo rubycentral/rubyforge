@@ -41,7 +41,7 @@ module GForgeMigrate
     set_primary_key 'group_artifact_id'
     set_table_name 'artifact_group_list'
     belongs_to :group, :class_name => 'GForgeGroup', :foreign_key => 'group_id'
-    has_many :artifacts, :class_name => "GForgeArtifact", :foreign_key => 'artifact_group_id'
+    has_many :artifacts, :class_name => "GForgeArtifact", :foreign_key => 'group_artifact_id'
     def corresponding_redmine_tracker_name
       case name
         when "Feature Requests": "Feature"
