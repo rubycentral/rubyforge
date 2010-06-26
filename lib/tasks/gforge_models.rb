@@ -38,8 +38,8 @@ module GForgeMigrate
     def convert_to_redmine_user
       puts "Converting GForge user #{id} to a Redmine user"
       user = User.new(:mail => email, :created_on => Time.at(add_date))
-      user.firstname = sanitized_name(firstname).blank? ? "None" : sanitized_name(firstname)
-      user.lastname = sanitized_name(lastname).blank? ? "None" : sanitized_name(lastname)
+      user.firstname = sanitized_name(firstname)
+      user.lastname = sanitized_name(lastname)
       user.type = "User"
       user.hashed_password = user_pw
       user.language = supported_language.language_code if language
@@ -52,7 +52,7 @@ module GForgeMigrate
     end
     private
     def sanitized_name(str)
-      str.gsub(/[^a-z0-9A-Z\s]/, "")[0..29]
+      str.blank? ? "None" : str.gsub(/[^a-z0-9A-Z\s]/, "")[0..29]
     end
   end
 
