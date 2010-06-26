@@ -55,7 +55,7 @@ module GForgeMigrate
   class GForgeArtifact < GForgeTable
     set_table_name 'artifact'
     set_primary_key 'artifact_id'
-    belongs_to :artifact_group, :class_name => "GForgeArtifactGroup", :foreign_key => 'artifact_group_id'
+    belongs_to :group_artifact, :class_name => "GForgeArtifactGroup", :foreign_key => 'group_artifact_id'
     belongs_to :submitted_by, :class_name => 'GForgeUser', :foreign_key => 'submitted_by'
   end
   
