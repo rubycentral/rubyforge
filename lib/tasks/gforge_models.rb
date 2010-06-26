@@ -52,7 +52,11 @@ module GForgeMigrate
     end
     private
     def sanitized_name(str)
-      str.blank? ? "None" : str.gsub(/[^a-z0-9A-Z\s]/, "")[0..29]
+      if str.blank? || str.gsub(/[^a-z0-9A-Z\s]/, "").blank?
+        "None"
+      else
+        str.gsub(/[^a-z0-9A-Z\s]/, "")[0..29]
+      end
     end
   end
 
