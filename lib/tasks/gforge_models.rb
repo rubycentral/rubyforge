@@ -8,7 +8,7 @@ module GForgeMigrate
     set_primary_key 'group_id'
     has_many :user_group, :class_name => 'GForgeUserGroup', :foreign_key => 'group_id'
     has_many :users, :through => :user_group
-    has_many :trackers, :class_name => "GForgeArtifactGroup", :foreign_key => 'group_id'
+    has_many :artifact_groups, :class_name => "GForgeArtifactGroup", :foreign_key => 'group_id'
     named_scope :active, :conditions => {:status => 'A'}
     named_scope :non_system, :conditions => 'group_id > 4'
   end 
@@ -42,17 +42,21 @@ module GForgeMigrate
     set_table_name 'artifact_group_list'
     belongs_to :group, :class_name => 'GForgeGroup', :foreign_key => 'group_id'
     has_many :artifacts, :class_name => "GForgeArtifact", :foreign_key => 'artifact_group_id'
-    # FIXME
-    # def redmine_tracker_name
-    #   case name
-    #     when ""
-    #   end
-    # end
+    def corresponding_redmine_tracker_name
+      case name
+        when "Feature Requests": "Feature"
+        when "Bugs": "Bug"
+        when "Support Requests": "Support"
+        when "Patches": "Patch"
+        else "Bug"
+      end
+    end
   end
   class GForgeArtifact < GForgeTable
     set_table_name 'artifact'
     set_primary_key 'artifact_id'
-    belongs_to :tracker, :class_name => "GForgeArtifactGroup", :foreign_key => 'artifact_group_id'
+    belongs_to :artifact_group, :class_name => "GForgeArtifactGroup", :foreign_key => 'artifact_group_id'
+    belongs_to :submitted_by, :class_name => 'GForgeUser', :foreign_key => 'submitted_by'
   end
   
 end

@@ -16,6 +16,8 @@ namespace :redmine do
   # that, the Roles all have blank permission attribute.  I added a Role.reset_column_information to no avail... what am I missing here?
   task :migrate_from_gforge => [:environment, 'redmine:load_default_data', 'redmine:gforge_migration_default_data', 'redmine:create_anonymous_user'] do 
     include GForgeMigrate
+    saved_notified_events = Setting.notified_events
+    Setting.notified_events.clear
     Project.transaction do 
       count = GForgeGroup.non_system.active.count
       GForgeGroup.non_system.active.each_with_index do |gforge_group, idx|
@@ -34,12 +36,25 @@ namespace :redmine do
             Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Developer").id])
           end
         end
-        gforge_group.trackers.each do |tracker|
-          project.issues.create!(:tracker => Tracker.find_by_name(tracker.name))
+        gforge_group.artifact_groups.each do |artifact_group|
+          artifact_group.artifacts.each do |artifact|
+            tracker = project.trackers.find_by_name(artifact.artifact_group.corresponding_redmine_tracker_name)
+            if !tracker
+              project.trackers << Tracker.find_by_name(artifact.artifact_group.corresponding_redmine_tracker_name)
+              tracker = project.trackers.last
+            end
+            project.issues.create!(
+              :tracker => tracker, 
+              :author => create_or_fetch_user(artifact.submitted_by),
+              :description => artifact.details,
+              :subject => artifact.summary)
+            # FIXME map issue status, category, etc
+          end
         end
-        break #if Project.count > 10
+        break if Project.count > 10
       end
     end
+    Setting.notified_events = saved_notified_events
   end
   
   def create_or_fetch_user(gforge_user)
@@ -48,12 +63,12 @@ namespace :redmine do
     else
       user = User.new(
       :mail => gforge_user.email, 
-      :hashed_password => gforge_user.user_pw, 
       :firstname => (gforge_user.realname.split(" ")[0] rescue gforge_user.realname), 
-      :lastname => (gforge_user.realname.split(" ")[1] rescue ""),
-      :created_on => Time.at(gforge_user.add_date),
-      :type => "User"
+      :created_on => Time.at(gforge_user.add_date)
       )
+      user.lastname = (gforge_user.realname.split(" ")[1] rescue "None") || "None"
+      user.type = "User"
+      user.hashed_password = gforge_user.user_pw
       user.language = gforge_user.supported_language.language_code if gforge_user.language
       user.login = gforge_user.user_name
       user.save!
@@ -66,4 +81,4 @@ namespace :redmine do
   
 end
 
-require 'gforge_models'
+require 'lib/tasks/gforge_models'

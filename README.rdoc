@@ -32,5 +32,7 @@ Some notes on the differences between the GForge and the Redmine object models:
 * The GForge users table gets mapped into the Redmine users table and user_preferences table. 
  * GForge stores the user language setting as a foreign key into the supported_languages table.  Redmine stores it as a two letter string (e.g., 'en') in users.language.
 * The GForge user_group table gets mapped into the Redmine members table and member_roles table.
+* The GForge artifact_group table gets mapped into rows in the Redmine projects_trackers table (projects HABTM trackers).  Redmine Trackers are not per Project; they are shared for the whole system.  The current migration only provisions rows in the projects_trackers table as they are needed - e.g., a Project won't get a "Bug" Tracker unless there's a GForgeArtifact in a "Bug" GForgeArtifactGroup in this project.  If there's a GForgeArtifactGroup with an unexpected name (e.g., "Tom's Issues") those get mapped into the "Bug" Tracker.
+* The GForge artifact table gets mapped into the Redmine issues table.
 
 
