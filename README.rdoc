@@ -15,7 +15,8 @@ I'm thinking about running the migration one project at a time.  So the script g
 * see lib/tasks/migrate_from_gforge.rake
 * To run it: rake db:migrate:reset && rake redmine:migrate_from_gforge REDMINE_LANG=en
 * To migrate just one project: rake redmine:migrate_from_gforge REDMINE_LANG=en GFORGE_GROUP_TO_MIGRATE=rubygems
-* You can look at both object models in the same Ruby process like this:
+
+You can look at both object models in the same Ruby process like this:
 
   $ ./script/console
   Loading development environment (Rails 2.3.5)
