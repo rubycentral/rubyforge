@@ -9,7 +9,7 @@ module GForgeMigrate
     set_primary_key 'group_id'
     has_many :user_group, :class_name => 'GForgeUserGroup', :foreign_key => 'group_id'
     has_many :users, :through => :user_group
-    has_many :artifact_groups, :class_name => "GForgeArtifactGroup", :foreign_key => 'group_id'
+    has_many :artifact_group_lists, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_id'
     named_scope :active, :conditions => {:status => 'A'}
     named_scope :non_system, :conditions => 'group_id > 4'
   end 
@@ -69,7 +69,7 @@ module GForgeMigrate
     set_table_name 'supported_languages'
   end
 
-  class GForgeArtifactGroup < GForgeTable
+  class GForgeArtifactGroupList < GForgeTable
     set_primary_key 'group_artifact_id'
     set_table_name 'artifact_group_list'
     belongs_to :group, :class_name => 'GForgeGroup', :foreign_key => 'group_id'
@@ -88,8 +88,36 @@ module GForgeMigrate
   class GForgeArtifact < GForgeTable
     set_table_name 'artifact'
     set_primary_key 'artifact_id'
-    belongs_to :group_artifact, :class_name => "GForgeArtifactGroup", :foreign_key => 'group_artifact_id'
+    belongs_to :artifact_group_list, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_artifact_id'
     belongs_to :submitted_by, :class_name => 'GForgeUser', :foreign_key => 'submitted_by'
+    def convert_to_redmine_issue_in(project)
+      Issue.create!(
+        :project => project, 
+        :tracker => Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name), 
+        :author => create_or_fetch_user(submitted_by),
+        :description => details,
+        :status => redmine_status,
+        :subject => summary[0..254])
+      # FIXME map issue category, etc
+    end
+    # For GForge, this is: (1) Open, (2) Closed, (3) Deleted.
+    def redmine_status
+      if status_id == 1
+        IssueStatus.find_by_name("New")
+      elsif status_id == 2
+        IssueStatus.find_by_name("Closed")
+      else
+        IssueStatus.find_by_name("Deleted")
+      end
+    end
+  end
+  
+  def create_or_fetch_user(gforge_user)
+    if user = User.find_by_mail(gforge_user.email) 
+      user
+    else
+      gforge_user.convert_to_redmine_user
+    end
   end
   
 end

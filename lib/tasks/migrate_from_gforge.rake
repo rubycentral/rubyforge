@@ -1,4 +1,5 @@
 require 'active_record'
+require 'lib/tasks/gforge_models'
 
 namespace :redmine do
 
@@ -53,32 +54,13 @@ namespace :redmine do
           Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Developer").id])
         end
       end
-      gforge_group.artifact_groups.each do |artifact_group|
-        artifact_group.artifacts.each do |artifact|
-          tracker = project.trackers.find_by_name(artifact.group_artifact.corresponding_redmine_tracker_name)
-          if !tracker
-            project.trackers << Tracker.find_by_name(artifact.group_artifact.corresponding_redmine_tracker_name)
-            tracker = project.trackers.last
-          end
-          project.issues.create!(
-            :tracker => tracker, 
-            :author => create_or_fetch_user(artifact.submitted_by),
-            :description => artifact.details,
-            :subject => artifact.summary[0..254])
-          # FIXME map issue status, category, etc
+      gforge_group.artifact_group_lists.each do |artifact_group_list|
+        project.trackers << Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name) unless project.trackers.find_by_name(artifact_group_list.corresponding_redmine_tracker_name)
+        artifact_group_list.artifacts.each do |artifact|
+          artifact.convert_to_redmine_issue_in(project)
         end
       end
     end
   end
   
-  def create_or_fetch_user(gforge_user)
-    if user = User.find_by_mail(gforge_user.email) 
-      user
-    else
-      gforge_user.convert_to_redmine_user
-    end
-  end
-  
 end
-
-require 'lib/tasks/gforge_models'
