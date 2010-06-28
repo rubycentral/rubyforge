@@ -10,24 +10,30 @@ namespace :redmine do
   
   task :gforge_migration_default_data => :environment do
     Tracker.create!(:name => "Patch", :is_in_chlog => true, :is_in_roadmap => false)
-    @saved_notified_events = Setting.notified_events
-    Setting.notified_events.clear
   end
   
   # TODO I bet there's some way to be able to run rake db:reset:migrate as a dependency here... but when I do
   # that, the Roles all have blank permission attribute.  I added a Role.reset_column_information to no avail... what am I missing here?
   task :migrate_from_gforge => [:environment, 'redmine:load_default_data', 'redmine:gforge_migration_default_data', 'redmine:create_anonymous_user'] do 
-    include GForgeMigrate
-    if ENV['GFORGE_GROUP_TO_MIGRATE']
-      puts "Migrating #{ENV['GFORGE_GROUP_TO_MIGRATE']}"
-      migrate_group GForgeGroup.find_by_unix_group_name(ENV['GFORGE_GROUP_TO_MIGRATE'])
-    else
-      count = GForgeGroup.non_system.active.count
-      GForgeGroup.non_system.active.each_with_index do |gforge_group, idx|
-        puts "Creating Project from Group #{gforge_group.unix_group_name} (group_id #{gforge_group.group_id}) (#{idx+1} of #{count})"
+    without_notifications do
+      include GForgeMigrate
+      if ENV['GFORGE_GROUP_TO_MIGRATE']
+        puts "Migrating #{ENV['GFORGE_GROUP_TO_MIGRATE']}"
+        migrate_group GForgeGroup.find_by_unix_group_name(ENV['GFORGE_GROUP_TO_MIGRATE'])
+      else
+        count = GForgeGroup.non_system.active.count
+        GForgeGroup.non_system.active.each_with_index do |gforge_group, idx|
+          puts "Creating Project from Group #{gforge_group.unix_group_name} (group_id #{gforge_group.group_id}) (#{idx+1} of #{count})"
+        end
       end
+      # TODO migrate over all GForge users - these are the ones who have not submitted a bug or joined a project or anything
     end
-    # now migrate over all GForge users - these are the ones who have not submitted a bug or joined a project or anything
+  end
+  
+  def without_notifications
+    saved_notified_events = Setting.notified_events
+    Setting.notified_events.clear
+    yield
     Setting.notified_events = @saved_notified_events
   end
   
