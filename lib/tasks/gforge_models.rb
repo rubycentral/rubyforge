@@ -94,7 +94,7 @@ module GForgeMigrate
     belongs_to :category, :class_name => "GForgeArtifactCategory", :foreign_key => 'category_id'
     def convert_to_redmine_issue_in(project)
       puts "Migrating artifact #{self.id}"
-      # TODO can't see an equivalent for resolution_id, close_date
+      # I don't see a Redmine equivalent for these fields: resolution_id, close_date
       issue = Issue.new(
         :project => project, 
         :tracker => Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name), 
@@ -103,6 +103,7 @@ module GForgeMigrate
         :status => redmine_status,
         :subject => summary[0..254],
         :assigned_to => create_or_fetch_user(assigned_to),
+        :priority => IssuePriority.find_by_position(priority),
         :created_on => Time.at(open_date)
       )
       if category
@@ -112,8 +113,6 @@ module GForgeMigrate
         end
         issue.category = redmine_category
       end
-      # FIXME map these fields
-      # priority          | integer | not null default 3
       issue.save!
     end
     # For GForge, this is: (1) Open, (2) Closed, (3) Deleted.
