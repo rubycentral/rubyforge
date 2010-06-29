@@ -90,6 +90,7 @@ module GForgeMigrate
     set_primary_key 'artifact_id'
     belongs_to :artifact_group_list, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_artifact_id'
     belongs_to :submitted_by, :class_name => 'GForgeUser', :foreign_key => 'submitted_by'
+    belongs_to :category, :class_name => "GForgeArtifactCategory", :foreign_key => 'category_id'
     def convert_to_redmine_issue_in(project)
       Issue.create!(
         :project => project, 
@@ -98,7 +99,7 @@ module GForgeMigrate
         :description => details,
         :status => redmine_status,
         :subject => summary[0..254])
-      # FIXME map issue category, etc
+        # FIXME map issue category, etc
     end
     # For GForge, this is: (1) Open, (2) Closed, (3) Deleted.
     def redmine_status
@@ -110,6 +111,11 @@ module GForgeMigrate
         IssueStatus.find_by_name("Deleted")
       end
     end
+  end
+  
+  class GForgeArtifactCategory < GForgeTable
+    set_table_name 'artifact_category'
+    belongs_to :auto_assign_to, :class_name => 'GForgeUser', :foreign_key => 'auto_assign_to'
   end
   
   def create_or_fetch_user(gforge_user)

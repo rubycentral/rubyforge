@@ -27,7 +27,7 @@ namespace :redmine do
           puts "Creating Project from Group #{gforge_group.unix_group_name} (group_id #{gforge_group.group_id}) (#{idx+1} of #{count})"
         end
       end
-      # TODO migrate over all GForge users - these are the ones who have not submitted a bug or joined a project or anything
+      # TODO migrate over all other GForge users - these are the ones who have not submitted a bug or joined a project or anything
     end
   end
   
@@ -49,10 +49,11 @@ namespace :redmine do
       gforge_group.user_group.each do |user_group|
         user = create_or_fetch_user(user_group.user)
         if user_group.group_admin?
-          Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Manager").id])
+          role_name = "Manager"
         else
-          Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name("Developer").id])
+          role_name = "Developer"
         end
+        Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name(role_name).id])
       end
       gforge_group.artifact_group_lists.each do |artifact_group_list|
         project.trackers << Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name) unless project.trackers.find_by_name(artifact_group_list.corresponding_redmine_tracker_name)
