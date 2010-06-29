@@ -94,7 +94,7 @@ module GForgeMigrate
     belongs_to :category, :class_name => "GForgeArtifactCategory", :foreign_key => 'category_id'
     def convert_to_redmine_issue_in(project)
       puts "Migrating artifact #{self.id}"
-      # TODO can't see of an equivalent for resolution_id, close_date
+      # TODO can't see an equivalent for resolution_id, close_date
       issue = Issue.new(
         :project => project, 
         :tracker => Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name), 
@@ -108,7 +108,7 @@ module GForgeMigrate
       if category
         redmine_category = project.issue_categories.find_by_name(category.category_name[0..29])
         if !redmine_category
-          project.issue_categories.create!(:name => category.category_name[0..29], :assigned_to => create_or_fetch_user(category.auto_assign_to))
+          redmine_category = project.issue_categories.create!(:name => category.category_name[0..29], :assigned_to => create_or_fetch_user(category.auto_assign_to))
         end
         issue.category = redmine_category
       end
