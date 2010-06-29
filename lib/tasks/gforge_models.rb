@@ -94,6 +94,7 @@ module GForgeMigrate
     belongs_to :category, :class_name => "GForgeArtifactCategory", :foreign_key => 'category_id'
     def convert_to_redmine_issue_in(project)
       puts "Migrating artifact #{self.id}"
+      # TODO can't see of an equivalent for resolution_id, close_date
       issue = Issue.new(
         :project => project, 
         :tracker => Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name), 
@@ -112,10 +113,7 @@ module GForgeMigrate
         issue.category = redmine_category
       end
       # FIXME map these fields
-      # resolution_id     | integer | not null default 100
       # priority          | integer | not null default 3
-      # assigned_to       | integer | not null default 100
-      # close_date        | integer | not null default 0
       issue.save!
     end
     # For GForge, this is: (1) Open, (2) Closed, (3) Deleted.
