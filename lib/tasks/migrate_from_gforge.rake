@@ -39,7 +39,7 @@ namespace :redmine do
   end
   
   def migrate_group(gforge_group)
-    Project.transaction do 
+    #Project.transaction do 
       if Project.exists?(:name => gforge_group.group_name[0..29])
         puts "Working around '#{gforge_group.group_name}'; that's the same name as an existing project"
         gforge_group.group_name = gforge_group.group_name[0..20] + gforge_group.group_id.to_s
@@ -61,7 +61,7 @@ namespace :redmine do
           artifact.convert_to_redmine_issue_in(project)
         end
       end
-    end
+    #end
   end
   
 end

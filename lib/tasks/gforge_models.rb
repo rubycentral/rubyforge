@@ -90,16 +90,33 @@ module GForgeMigrate
     set_primary_key 'artifact_id'
     belongs_to :artifact_group_list, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_artifact_id'
     belongs_to :submitted_by, :class_name => 'GForgeUser', :foreign_key => 'submitted_by'
+    belongs_to :assigned_to, :class_name => 'GForgeUser', :foreign_key => 'assigned_to'
     belongs_to :category, :class_name => "GForgeArtifactCategory", :foreign_key => 'category_id'
     def convert_to_redmine_issue_in(project)
-      Issue.create!(
+      puts "Migrating artifact #{self.id}"
+      issue = Issue.new(
         :project => project, 
         :tracker => Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name), 
         :author => create_or_fetch_user(submitted_by),
         :description => details,
         :status => redmine_status,
-        :subject => summary[0..254])
-        # FIXME map issue category, etc
+        :subject => summary[0..254],
+        :assigned_to => create_or_fetch_user(assigned_to),
+        :created_on => Time.at(open_date)
+      )
+      if category
+        redmine_category = project.issue_categories.find_by_name(category.category_name[0..29])
+        if !redmine_category
+          project.issue_categories.create!(:name => category.category_name[0..29], :assigned_to => create_or_fetch_user(category.auto_assign_to))
+        end
+        issue.category = redmine_category
+      end
+      # FIXME map these fields
+      # resolution_id     | integer | not null default 100
+      # priority          | integer | not null default 3
+      # assigned_to       | integer | not null default 100
+      # close_date        | integer | not null default 0
+      issue.save!
     end
     # For GForge, this is: (1) Open, (2) Closed, (3) Deleted.
     def redmine_status
@@ -116,6 +133,7 @@ module GForgeMigrate
   class GForgeArtifactCategory < GForgeTable
     set_table_name 'artifact_category'
     belongs_to :auto_assign_to, :class_name => 'GForgeUser', :foreign_key => 'auto_assign_to'
+    has_many :artifacts, :class_name => "GForgeArtifact", :foreign_key => "category_id"
   end
   
   def create_or_fetch_user(gforge_user)
