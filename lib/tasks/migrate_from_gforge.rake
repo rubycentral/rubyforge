@@ -25,6 +25,7 @@ namespace :redmine do
         count = GForgeGroup.non_system.active.count
         GForgeGroup.non_system.active.each_with_index do |gforge_group, idx|
           puts "Creating Project from Group #{gforge_group.unix_group_name} (group_id #{gforge_group.group_id}) (#{idx+1} of #{count})"
+          migrate_group GForgeGroup.find_by_unix_group_name(ENV['GFORGE_GROUP_TO_MIGRATE'])
         end
       end
       # TODO migrate over all other GForge users - these are the ones who have not submitted a bug or joined a project or anything
@@ -66,6 +67,18 @@ namespace :redmine do
         project.trackers << Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name) unless project.trackers.find_by_name(artifact_group_list.corresponding_redmine_tracker_name)
         artifact_group_list.artifacts.each do |artifact|
           artifact.convert_to_redmine_issue_in(project)
+        end
+      end
+      gforge_group.forum_groups.each do |forum_group|
+        board = forum_group.convert_to_redmine_board_in(project)
+        board_threads = {}
+        forum_group.forum_messages.each do |forum_message|
+          message = forum_message.convert_to_redmine_message_in(board)
+          board_threads[forum_message.id] = message
+          if forum_message.is_followup_to
+            message.parent = board_threads[forum_message.is_followup_to]
+            message.save!
+          end
         end
       end
     #end

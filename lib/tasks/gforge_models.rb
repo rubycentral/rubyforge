@@ -10,6 +10,7 @@ module GForgeMigrate
     has_many :user_group, :class_name => 'GForgeUserGroup', :foreign_key => 'group_id'
     has_many :users, :through => :user_group
     has_many :artifact_group_lists, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_id'
+    has_many :forum_groups, :class_name => "GForgeForumGroup", :foreign_key => 'group_id'
     named_scope :active, :conditions => {:status => 'A'}
     named_scope :non_system, :conditions => 'group_id > 4'
     def redmine_status
@@ -21,6 +22,38 @@ module GForgeMigrate
     end
     # TODO - how about these fields?  use_blah (use_survey, use_forum, etc), license_other, license
   end 
+  
+  class GForgeForumGroup < GForgeTable
+    set_table_name "forum_group_list"
+    set_primary_key "group_forum_id"
+    belongs_to :group, :class_name => "GForgeGroup"
+    has_many :forum_messages, :class_name => "GForgeForumMessage", :foreign_key => "group_forum_id"
+    def convert_to_redmine_board_in(project)
+      # Don't see an equivalent to allow_anonymous, is_public, or send_all_posts_to
+      project.boards.create!(:name => forum_name, :description => description)
+    end
+  end
+  
+  class GForgeForumMessage < GForgeTable
+    set_table_name "forum"
+    set_primary_key "msg_id"
+    belongs_to :forum_group, :class_name => 'GForgeForumGroup', :foreign_key => 'group_forum_id'
+    belongs_to :posted_by, :class_name => 'GForgeUser', :foreign_key => 'posted_by'
+    def convert_to_redmine_message_in(board)
+      puts "Converting forum message #{msg_id} to a Redmine message"
+      message = board.messages.new(
+        :author => create_or_fetch_user(posted_by),
+        :subject => subject,
+        :content => body.blank? ? "None" : body,
+        :created_on => Time.at(post_date)
+      )
+      message.save
+      message
+      # thread_id        | integer | not null default 0
+      # has_followups    | integer | default 0
+      # most_recent_date | integer | not null default 0
+    end
+  end
 
   class GForgeUserGroup < GForgeTable
     set_table_name "user_group"
@@ -94,6 +127,7 @@ module GForgeMigrate
   end
 
   class GForgeArtifact < GForgeTable
+    # TODO what about artifact_history, artifact_monitor, artifact_message?
     set_table_name 'artifact'
     set_primary_key 'artifact_id'
     belongs_to :artifact_group_list, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_artifact_id'
