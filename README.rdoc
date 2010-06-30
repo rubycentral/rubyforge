@@ -38,9 +38,9 @@ That way I don't have to type that <tt>require</tt> every time I get into <tt>sc
 
 Some notes on the differences between the GForge and the Redmine object models:
 
-* The GForge groups table gets mapped into the Redmine projects table.
-* The GForge users table gets mapped into the Redmine users table and user_preferences table. 
-* GForge stores the user language setting as a foreign key into the supported_languages table.  Redmine stores it as a two letter string (e.g., 'en') in users.language.
+* The GForge <tt>groups</tt> table gets mapped into the Redmine <tt>projects</tt> table.
+* The GForge <tt>users</tt> table gets mapped into the Redmine <tt>users</tt> table and <tt>user_preferences</tt> table. 
+* GForge stores the user language setting as a foreign key into the <tt>supported_languages</tt> table.  Redmine stores it as a two letter string (e.g., 'en') in <tt>users.language</tt>.
 * The GForge <tt>user_group</tt> table gets mapped into the Redmine <tt>members</tt> table and <tt>member_roles</tt> table.
 * The GForge <tt>artifact_group_list</tt> table gets mapped into rows in the Redmine <tt>projects_trackers</tt> table (<tt>projects</tt> HABTM <tt>trackers</tt>).  Redmine <tt>trackers</tt> are not per <tt>project</tt>; they are shared for the whole system.  The current migration only provisions rows in the <tt>projects_trackers</tt> table as they are needed - e.g., a <tt>project</tt> won't get a "Bug" <tt>tracker</tt> unless there's a GForge <tt>artifact</tt> in a "Bug" GForge <tt>artifact_group_list</tt> in this project.  If there's a GForge <tt>artifact_group_list</tt> with an unexpected name (e.g., "Tom's Issues") those get mapped into the "Bug" <tt>tracker</tt>.
 * The GForge <tt>artifact</tt> table gets mapped into the Redmine <tt>issues</tt> table.  GForge <tt>artifacts</tt> have only three statuses (open/closed/deleted) whereas Redmine issues have six possible <tt>IssueStatus</tt> settings, so I just map them over to the <tt>IssueStatus</tt> with the same name.  GForge <tt>artifacts</tt> have five priority levels; these map onto Redmine's five standard <tt>IssueCategory</tt> values.
