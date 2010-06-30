@@ -12,6 +12,14 @@ module GForgeMigrate
     has_many :artifact_group_lists, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_id'
     named_scope :active, :conditions => {:status => 'A'}
     named_scope :non_system, :conditions => 'group_id > 4'
+    def redmine_status
+      if status == 'A'
+        Project::STATUS_ACTIVE
+      else
+        Project::STATUS_ARCHIVED
+      end
+    end
+    # TODO - how about these fields?  use_blah (use_survey, use_forum, etc), license_other, license
   end 
 
   class GForgeUserGroup < GForgeTable
