@@ -20,12 +20,12 @@ namespace :redmine do
       include GForgeMigrate
       if ENV['GFORGE_GROUP_TO_MIGRATE']
         puts "Migrating #{ENV['GFORGE_GROUP_TO_MIGRATE']}"
-        migrate_group GForgeGroup.find_by_unix_group_name(ENV['GFORGE_GROUP_TO_MIGRATE'])
+        migrate_group(GForgeGroup.find_by_unix_group_name(ENV['GFORGE_GROUP_TO_MIGRATE']))
       else
         count = GForgeGroup.non_system.active.count
         GForgeGroup.non_system.active.each_with_index do |gforge_group, idx|
           puts "Creating Project from Group #{gforge_group.unix_group_name} (group_id #{gforge_group.group_id}) (#{idx+1} of #{count})"
-          migrate_group GForgeGroup.find_by_unix_group_name(ENV['GFORGE_GROUP_TO_MIGRATE'])
+          migrate_group(gforge_group)
         end
       end
       # TODO migrate over all other GForge users - these are the ones who have not submitted a bug or joined a project or anything
