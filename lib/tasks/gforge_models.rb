@@ -29,7 +29,7 @@ module GForgeMigrate
     belongs_to :group, :class_name => "GForgeGroup"
     has_many :forum_messages, :class_name => "GForgeForumMessage", :foreign_key => "group_forum_id"
     def convert_to_redmine_board_in(project)
-      # Don't see an equivalent to allow_anonymous, is_public, or send_all_posts_to
+      # I don't see an equivalent to allow_anonymous, is_public, or send_all_posts_to
       project.boards.create!(:name => forum_name, :description => (description.blank? ? "None" : description))
     end
   end
@@ -40,6 +40,7 @@ module GForgeMigrate
     belongs_to :forum_group, :class_name => 'GForgeForumGroup', :foreign_key => 'group_forum_id'
     belongs_to :posted_by, :class_name => 'GForgeUser', :foreign_key => 'posted_by'
     def convert_to_redmine_message_in(board)
+      # I don't see a need for the GForge fields thread_id, has_followups, or most_recent_date
       puts "Converting forum message #{msg_id} to a Redmine message"
       message = board.messages.new(
         :author => create_or_fetch_user(posted_by),
@@ -47,11 +48,8 @@ module GForgeMigrate
         :content => body.blank? ? "None" : body,
         :created_on => Time.at(post_date)
       )
-      message.save
+      message.save!
       message
-      # thread_id        | integer | not null default 0
-      # has_followups    | integer | default 0
-      # most_recent_date | integer | not null default 0
     end
   end
 
@@ -127,7 +125,8 @@ module GForgeMigrate
   end
 
   class GForgeArtifact < GForgeTable
-    # TODO what about artifact_history, artifact_monitor, artifact_message?
+    # TODO what about artifact_monitor (watchers), artifact_message (journals)?
+    # TODO it looks like the Redmine equivalent of artifact_history is the combination of journal and journal entries.  Is it worthwhile to migrate over that data?
     set_table_name 'artifact'
     set_primary_key 'artifact_id'
     belongs_to :artifact_group_list, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_artifact_id'

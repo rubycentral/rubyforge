@@ -46,3 +46,4 @@ Some notes on the differences between the GForge and the Redmine object models:
 * The GForge <tt>artifact</tt> table gets mapped into the Redmine <tt>issues</tt> table.  GForge <tt>artifacts</tt> have only three statuses (open/closed/deleted) whereas Redmine issues have six possible <tt>IssueStatus</tt> settings, so I just map them over to the <tt>IssueStatus</tt> with the same name.  GForge <tt>artifacts</tt> have five priority levels; these map onto Redmine's five standard <tt>IssueCategory</tt> values.
 * The GForge <tt>artifact_category</tt> table is mapped to the Redmine <tt>issue_categories</tt> table.  
 
+
