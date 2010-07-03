@@ -36,7 +36,7 @@ namespace :redmine do
     saved_notified_events = Setting.notified_events
     Setting.notified_events.clear
     yield
-    Setting.notified_events = @saved_notified_events
+    Setting.notified_events = saved_notified_events
   end
   
   def migrate_group(gforge_group)
