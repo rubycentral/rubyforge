@@ -73,6 +73,7 @@ module GForgeMigrate
     belongs_to :user_type, :foreign_key => 'type_id'
     has_many :forum_messages, :class_name => "Forum", :foreign_key => "posted_by"
     has_many :news_bytes, :foreign_key => "submitted_by"
+    has_many :artifact_monitors, :class_name => "GForgeArtifactMonitor", :foreign_key => 'user_id'
     named_scope :active, :conditions => {:status => "A"}
     def convert_to_redmine_user
       puts "Converting GForge user #{id} to a Redmine user"
@@ -123,9 +124,18 @@ module GForgeMigrate
       end
     end
   end
+  
+  class GForgeArtifactMonitor < GForgeTable
+    set_table_name "artifact_monitor"
+    belongs_to :artifact, :class_name => "GForgeArtifact"
+    belongs_to :user, :class_name => "GForgeUser"
+    def convert_to_redmine_watcher_on(issue)
+      Watcher.create!(:watchable_type => "Issue", :watchable_id => issue.id, :user => create_or_fetch_user(user)) unless issue.watchers.map(&:user_id).include?(user_id)
+    end
+  end
 
   class GForgeArtifact < GForgeTable
-    # TODO what about artifact_monitor (watchers), artifact_message (journals)?
+    # TODO what about artifact_message (journals)?
     # TODO it looks like the Redmine equivalent of artifact_history is the combination of journal and journal entries.  Is it worthwhile to migrate over that data?
     set_table_name 'artifact'
     set_primary_key 'artifact_id'
@@ -133,6 +143,7 @@ module GForgeMigrate
     belongs_to :submitted_by, :class_name => 'GForgeUser', :foreign_key => 'submitted_by'
     belongs_to :assigned_to, :class_name => 'GForgeUser', :foreign_key => 'assigned_to'
     belongs_to :category, :class_name => "GForgeArtifactCategory", :foreign_key => 'category_id'
+    has_many :monitors, :class_name => "GForgeArtifactMonitor", :foreign_key => 'artifact_id'
     def convert_to_redmine_issue_in(project)
       puts "Migrating artifact #{self.id}"
       # I don't see a Redmine equivalent for these fields: resolution_id, close_date
@@ -155,6 +166,7 @@ module GForgeMigrate
         issue.category = redmine_category
       end
       issue.save!
+      issue
     end
     # For GForge, this is: (1) Open, (2) Closed, (3) Deleted.
     def redmine_status

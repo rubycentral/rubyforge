@@ -66,7 +66,10 @@ namespace :redmine do
       gforge_group.artifact_group_lists.each do |artifact_group_list|
         project.trackers << Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name) unless project.trackers.find_by_name(artifact_group_list.corresponding_redmine_tracker_name)
         artifact_group_list.artifacts.each do |artifact|
-          artifact.convert_to_redmine_issue_in(project)
+          issue = artifact.convert_to_redmine_issue_in(project)
+          artifact.monitors.each do |artifact_monitor|
+            artifact_monitor.convert_to_redmine_watcher_on(issue)
+          end
         end
       end
       gforge_group.forum_groups.each do |forum_group|
