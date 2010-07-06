@@ -133,9 +133,17 @@ module GForgeMigrate
       Watcher.create!(:watchable_type => "Issue", :watchable_id => issue.id, :user => create_or_fetch_user(user)) unless issue.watchers.map(&:user_id).include?(user_id)
     end
   end
+  
+  class GForgeArtifactMessage < GForgeTable
+    set_table_name 'artifact_message'
+    belongs_to :artifact, :class_name => "GForgeArtifact"
+    belongs_to :user, :class_name => 'GForgeUser', :foreign_key => 'submitted_by'
+    def convert_to_redmine_journal_on(issue)
+      Journal.create!(:journalized_type => "Issue", :journalized_id => issue.id, :user => create_or_fetch_user(user), :notes => body, :created_on => Time.at(adddate))
+    end
+  end
 
   class GForgeArtifact < GForgeTable
-    # TODO what about artifact_message (journals)?
     # TODO it looks like the Redmine equivalent of artifact_history is the combination of journal and journal entries.  Is it worthwhile to migrate over that data?
     set_table_name 'artifact'
     set_primary_key 'artifact_id'
@@ -144,6 +152,7 @@ module GForgeMigrate
     belongs_to :assigned_to, :class_name => 'GForgeUser', :foreign_key => 'assigned_to'
     belongs_to :category, :class_name => "GForgeArtifactCategory", :foreign_key => 'category_id'
     has_many :monitors, :class_name => "GForgeArtifactMonitor", :foreign_key => 'artifact_id'
+    has_many :messages, :class_name => "GForgeArtifactMessage", :foreign_key => 'artifact_id'
     def convert_to_redmine_issue_in(project)
       puts "Migrating artifact #{self.id}"
       # I don't see a Redmine equivalent for these fields: resolution_id, close_date

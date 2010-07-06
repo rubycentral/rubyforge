@@ -45,5 +45,7 @@ Some notes on the differences between the GForge and the Redmine object models:
 * The GForge <tt>artifact_group_list</tt> table gets mapped into rows in the Redmine <tt>projects_trackers</tt> table (<tt>projects</tt> HABTM <tt>trackers</tt>).  Redmine <tt>trackers</tt> are not per <tt>project</tt>; they are shared for the whole system.  The current migration only provisions rows in the <tt>projects_trackers</tt> table as they are needed - e.g., a <tt>project</tt> won't get a "Bug" <tt>tracker</tt> unless there's a GForge <tt>artifact</tt> in a "Bug" GForge <tt>artifact_group_list</tt> in this project.  If there's a GForge <tt>artifact_group_list</tt> with an unexpected name (e.g., "Tom's Issues") those get mapped into the "Bug" <tt>tracker</tt>.
 * The GForge <tt>artifact</tt> table gets mapped into the Redmine <tt>issues</tt> table.  GForge <tt>artifacts</tt> have only three statuses (open/closed/deleted) whereas Redmine issues have six possible <tt>IssueStatus</tt> settings, so I just map them over to the <tt>IssueStatus</tt> with the same name.  GForge <tt>artifacts</tt> have five priority levels; these map onto Redmine's five standard <tt>IssueCategory</tt> values.
 * The GForge <tt>artifact_category</tt> table is mapped to the Redmine <tt>issue_categories</tt> table.  
+* The GForge <tt>artifact_monitor</tt> table is mapped to the Redmine <tt>watchers</tt> table.  
+* The GForge <tt>artifact_message</tt> table is mapped to the Redmine <tt>journals</tt> table.  
 
 

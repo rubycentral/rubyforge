@@ -70,6 +70,9 @@ namespace :redmine do
           artifact.monitors.each do |artifact_monitor|
             artifact_monitor.convert_to_redmine_watcher_on(issue)
           end
+          artifact.messages.each do |artifact_message|
+            artifact_message.convert_to_redmine_journal_on(issue)
+          end
         end
       end
       gforge_group.forum_groups.each do |forum_group|
