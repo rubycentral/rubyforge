@@ -76,7 +76,6 @@ module GForgeMigrate
     has_many :artifact_monitors, :class_name => "GForgeArtifactMonitor", :foreign_key => 'user_id'
     named_scope :active, :conditions => {:status => "A"}
     def convert_to_redmine_user
-      puts "Converting GForge user #{id} to a Redmine user"
       user = User.new(:mail => email, :created_on => Time.at(add_date))
       user.firstname = sanitized_name(firstname)
       user.lastname = sanitized_name(lastname)
@@ -154,7 +153,6 @@ module GForgeMigrate
     has_many :monitors, :class_name => "GForgeArtifactMonitor", :foreign_key => 'artifact_id'
     has_many :messages, :class_name => "GForgeArtifactMessage", :foreign_key => 'artifact_id'
     def convert_to_redmine_issue_in(project)
-      puts "Migrating artifact #{self.id}"
       # I don't see a Redmine equivalent for these fields: resolution_id, close_date
       issue = Issue.new(
         :project => project, 
@@ -199,7 +197,9 @@ module GForgeMigrate
     if user = User.find_by_mail(gforge_user.email) 
       user
     else
-      gforge_user.convert_to_redmine_user
+      showing_migrated_ids(gforge_user) do
+        gforge_user.convert_to_redmine_user
+      end
     end
   end
   

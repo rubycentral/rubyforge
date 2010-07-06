@@ -39,6 +39,12 @@ namespace :redmine do
     Setting.notified_events = saved_notified_events
   end
   
+  def showing_migrated_ids(object)
+    result = yield object
+    puts "Migrated #{object.class.class_name} #{object.id} to #{result.class} #{result.id}"
+    result
+  end
+  
   def migrate_group(gforge_group)
     #Project.transaction do 
       if Project.exists?(:name => gforge_group.group_name[0..29])
@@ -66,12 +72,18 @@ namespace :redmine do
       gforge_group.artifact_group_lists.each do |artifact_group_list|
         project.trackers << Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name) unless project.trackers.find_by_name(artifact_group_list.corresponding_redmine_tracker_name)
         artifact_group_list.artifacts.each do |artifact|
-          issue = artifact.convert_to_redmine_issue_in(project)
+          issue = showing_migrated_ids(artifact) do
+            artifact.convert_to_redmine_issue_in(project)
+          end
           artifact.monitors.each do |artifact_monitor|
-            artifact_monitor.convert_to_redmine_watcher_on(issue)
+            showing_migrated_ids(artifact_monitor) do |artifact_monitor|
+              artifact_monitor.convert_to_redmine_watcher_on(issue)
+            end
           end
           artifact.messages.each do |artifact_message|
-            artifact_message.convert_to_redmine_journal_on(issue)
+            showing_migrated_ids(artifact_message) do |artifact_message|
+              artifact_message.convert_to_redmine_journal_on(issue)
+            end
           end
         end
       end
