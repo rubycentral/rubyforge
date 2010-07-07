@@ -192,6 +192,7 @@ module GForgeMigrate
     has_many :artifacts, :class_name => "GForgeArtifact", :foreign_key => "category_id"
   end
   
+  # I experimented with memoizing this method, but it actually slowed the migration down
   def create_or_fetch_user(gforge_user)
     if user = User.find_by_mail(gforge_user.email) 
       user
@@ -201,6 +202,6 @@ module GForgeMigrate
       end
     end
   end
-  
+
 end
 
