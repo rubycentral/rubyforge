@@ -41,7 +41,6 @@ module GForgeMigrate
     belongs_to :posted_by, :class_name => 'GForgeUser', :foreign_key => 'posted_by'
     def convert_to_redmine_message_in(board)
       # I don't see a need for the GForge fields thread_id, has_followups, or most_recent_date
-      puts "Converting forum message #{msg_id} to a Redmine message"
       message = board.messages.new(
         :author => create_or_fetch_user(posted_by),
         :subject => subject,

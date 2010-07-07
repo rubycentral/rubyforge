@@ -91,7 +91,10 @@ namespace :redmine do
         board = forum_group.convert_to_redmine_board_in(project)
         board_threads = {}
         forum_group.forum_messages.each do |forum_message|
-          message = forum_message.convert_to_redmine_message_in(board)
+          
+          message = showing_migrated_ids(forum_message) do 
+            forum_message.convert_to_redmine_message_in(board)
+          end
           board_threads[forum_message.id] = message
           if forum_message.is_followup_to
             message.parent = board_threads[forum_message.is_followup_to]
