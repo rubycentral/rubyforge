@@ -29,7 +29,7 @@ You can look at both object models in the same Ruby process like this:
 
 I found it helpful to add this to my <tt>~/.railsrc</tt>:
 
-  if `pwd` =~ %r{Users/tom/github/rubyforge}
+  if Dir.getwd == "/Users/tom/github/rubyforge"
     require 'active_record'
     require 'lib/tasks/gforge_models.rb' ; include GForgeMigrate
   end
