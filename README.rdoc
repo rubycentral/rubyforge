@@ -31,7 +31,8 @@ I found it helpful to add this to my <tt>~/.railsrc</tt>:
 
   if Dir.getwd == "/Users/tom/github/rubyforge"
     require 'active_record'
-    require 'lib/tasks/gforge_models.rb' ; include GForgeMigrate
+    require 'lib/tasks/gforge_models.rb'
+    include GForgeMigrate
   end
 
 That way I don't have to type that <tt>require</tt> every time I get into <tt>script/console</tt> to troubleshoot a migration failure.
