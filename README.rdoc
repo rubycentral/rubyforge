@@ -46,31 +46,25 @@ Some notes on the differences between the GForge and the Redmine object models:
 
 GForge table to Redmine table mapping
 =====================================
-  activity_log               -- not migrated --
-  activity_log_old           -- not migrated --
-  activity_log_old_old       -- not migrated --
-  api_requests               -- not migrated --  
-  artifact                   issues
+  artifact                     issues
   artifact_canned_responses      
-  artifact_category          issue_categories
+  artifact_category            issue_categories
   artifact_counts_agg
   artifact_extra_field_data
   artifact_extra_field_elements
   artifact_extra_field_list
   artifact_file
-  artifact_group
-  artifact_group_list        boards
+  artifact_group               boards
+  artifact_group_list          boards
   artifact_history
-  artifact_message           journals
-  artifact_monitor           watchers
+  artifact_message             journals
+  artifact_monitor             watchers
   artifact_perm
   artifact_resolution
   artifact_status
   canned_responses
   country_code
-  cron_history
   db_images
-  disk_usages                -- not migrated --
   doc_data
   doc_groups
   doc_states
@@ -89,7 +83,6 @@ GForge table to Redmine table mapping
   frs_processor
   frs_release
   frs_status
-  gem_namespace_ownerships   -- not migrated --
   group_cvs_history
   group_history
   group_plugin
@@ -97,7 +90,6 @@ GForge table to Redmine table mapping
   licenses
   mail_group_list
   massmail_queue
-  mirrors                    -- not migrated --
   news_bytes
   people_job
   people_job_category
@@ -197,8 +189,17 @@ GForge table to Redmine table mapping
   user_plugin
   user_preferences
   user_ratings
-  user_session
   user_type
   users                      users,user_preferences
 
 
+Currently we're not planning to migrate these tables
+  activity_log               
+  activity_log_old           
+  activity_log_old_old       
+  api_requests                 
+  cron_history
+  disk_usages                
+  gem_namespace_ownerships   
+  mirrors                    
+  user_session
