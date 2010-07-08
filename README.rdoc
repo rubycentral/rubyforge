@@ -192,7 +192,7 @@ Some notes on the differences between the GForge and the Redmine object models:
   users                      users,user_preferences
 
 
-=== Currently we're not planning to migrate these tables
+=== Tables that won't be migrated
   activity_log               
   activity_log_old           
   activity_log_old_old       
