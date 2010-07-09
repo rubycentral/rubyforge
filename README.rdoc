@@ -12,6 +12,18 @@ Stuff we need to do:
 
 I'm thinking about running the migration one project at a time.  So the script gets a GForgeGroup, creates a Project, finds the associated GForgeUsers, creates them if necessary, etc.  My hope here is that once we've completely done one project, the rest will run relatively smoothly, with only some edge cases to account for.
 
+Migration FIXMEs
+
+* issues not being assigned?  why does user102@example.org/password have no issues here /my/page
+* need to populate activity, e.g., /projects/support/activity
+* need to enable certain modules for projects, i.e., /projects/support/settings
+
+Redmine FIXMEs
+* will need to modify Redmine auth to use MD5
+* will need to limit => 20 on /projects
+
+General
+
 * see <tt>lib/tasks/migrate_from_gforge.rake</tt>
 * To run it: <tt>rake db:migrate:reset && rake redmine:migrate_from_gforge REDMINE_LANG=en</tt>
 * To migrate just one project: <tt>rake redmine:migrate_from_gforge REDMINE_LANG=en GFORGE_GROUP_TO_MIGRATE=rubygems</tt>
@@ -167,8 +179,6 @@ Some notes on the differences between the GForge and the Redmine object models:
   trove_group_link
   trove_treesums
   user_bookmarks
-  user_diary
-  user_diary_monitor
   user_group                 members,member_roles
   user_metric
   user_metric0
@@ -199,6 +209,8 @@ Some notes on the differences between the GForge and the Redmine object models:
   survey_rating_response
   survey_responses
   surveys
+  user_diary
+  user_diary_monitor
   user_ratings
   user_session
   user_type
