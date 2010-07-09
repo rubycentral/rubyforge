@@ -146,11 +146,6 @@ Some notes on the differences between the GForge and the Redmine object models:
   schema_migrations
   skills_data
   skills_data_types
-  snippet
-  snippet_package
-  snippet_package_item
-  snippet_package_version
-  snippet_version
   stats_agg_logo_by_day
   stats_agg_logo_by_group
   stats_agg_pages_by_day
@@ -192,6 +187,11 @@ Some notes on the differences between the GForge and the Redmine object models:
   disk_usages                
   gem_namespace_ownerships   
   mirrors                    
+  snippet
+  snippet_package
+  snippet_package_item
+  snippet_package_version
+  snippet_version
   supported_languages - there's a foreign key to this table from users, and that data is captured in redmine's users.language field
   survey_question_types
   survey_questions
