@@ -160,7 +160,6 @@ module GForgeMigrate
         :description => details,
         :status => redmine_status,
         :subject => summary[0..254],
-        :assigned_to => create_or_fetch_user(assigned_to),
         :priority => IssuePriority.find_by_position(priority),
         :created_on => Time.at(open_date),
         :updated_on => updated_on_for_redmine
@@ -173,7 +172,16 @@ module GForgeMigrate
         issue.category = redmine_category
       end
       issue.save!
+      issue.assigned_to = assigned_to_for_redmine
+      issue.save!
       issue
+    end
+    def assigned_to_for_redmine
+      if assigned_to.user_id == 100
+        nil
+      else
+        create_or_fetch_user(assigned_to)
+      end
     end
     def updated_on_for_redmine
       if close_date && close_date != 0

@@ -19,7 +19,7 @@ Migration FIXMEs
 * need to enable certain modules for projects, i.e., /projects/support/settings
 
 Redmine FIXMEs
-* will need to modify Redmine auth to use MD5
+* will need to modify Redmine auth to use MD5 since that's what GForge uses
 * will need to limit => 20 on /projects
 
 General
