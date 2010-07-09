@@ -166,13 +166,6 @@ Some notes on the differences between the GForge and the Redmine object models:
   stats_site_pages_by_day
   stats_site_pages_by_month
   stats_subd_pages
-  supported_languages
-  survey_question_types
-  survey_questions
-  survey_rating_aggregate
-  survey_rating_response
-  survey_responses
-  surveys
   themes
   trove_agg
   trove_cat
@@ -187,8 +180,6 @@ Some notes on the differences between the GForge and the Redmine object models:
   user_metric_history
   user_plugin
   user_preferences
-  user_ratings
-  user_type
   users                      users,user_preferences
 
 
@@ -201,4 +192,13 @@ Some notes on the differences between the GForge and the Redmine object models:
   disk_usages                
   gem_namespace_ownerships   
   mirrors                    
+  supported_languages - there's a foreign key to this table from users, and that data is captured in redmine's users.language field
+  survey_question_types
+  survey_questions
+  survey_rating_aggregate
+  survey_rating_response
+  survey_responses
+  surveys
+  user_ratings
   user_session
+  user_type
