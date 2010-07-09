@@ -23,7 +23,7 @@ namespace :redmine do
         migrate_group(GForgeGroup.find_by_unix_group_name(ENV['GFORGE_GROUP_TO_MIGRATE']))
       else
         count = GForgeGroup.non_system.active.count
-        GForgeGroup.non_system.active.each_with_index do |gforge_group, idx|
+        GForgeGroup.non_system.active.find(:all, :order => "id asc").each_with_index do |gforge_group, idx|
           puts "Creating Project from Group #{gforge_group.unix_group_name} (group_id #{gforge_group.group_id}) (#{idx+1} of #{count})"
           migrate_group(gforge_group)
         end

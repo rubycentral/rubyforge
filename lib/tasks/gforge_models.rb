@@ -79,7 +79,7 @@ module GForgeMigrate
       user.firstname = sanitized_name(firstname)
       user.lastname = sanitized_name(lastname)
       user.type = "User"
-      user.hashed_password = user_pw
+      user.hashed_password = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"  # that's 'password', FIXME user_pw
       user.language = supported_language.language_code if language
       if User.exists?(:login => user_name)
         user.login = "#{user_name}_#{id}"
@@ -162,7 +162,8 @@ module GForgeMigrate
         :subject => summary[0..254],
         :assigned_to => create_or_fetch_user(assigned_to),
         :priority => IssuePriority.find_by_position(priority),
-        :created_on => Time.at(open_date)
+        :created_on => Time.at(open_date),
+        :updated_on => updated_on_for_redmine
       )
       if category
         redmine_category = project.issue_categories.find_by_name(category.category_name[0..29])
@@ -173,6 +174,15 @@ module GForgeMigrate
       end
       issue.save!
       issue
+    end
+    def updated_on_for_redmine
+      if close_date && close_date != 0
+        Time.at(close_date)
+      elsif !messages.empty?
+        Time.at(messages.last.adddate)
+      else
+        Time.at(open_date)
+      end
     end
     # For GForge, this is: (1) Open, (2) Closed, (3) Deleted.
     def redmine_status
