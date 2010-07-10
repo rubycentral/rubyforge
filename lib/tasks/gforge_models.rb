@@ -188,10 +188,9 @@ module GForgeMigrate
       end
       issue.save!
       if assigned_to.user_id == 100
-        ActiveRecord::Base.record_timestamps = false
-        issue.assigned_to = nil
-        ActiveRecord::Base.record_timestamps = true
-        issue.save!
+        # I fiddled around with ActiveRecord::Base.record_timestamps for a while here before falling back to SQL... seemed like one of the callbacks was causing the updated_on field
+        # to be updated when I nulled out assigned_to_id
+        ActiveRecord::Base.connection.execute("update issues set assigned_to_id = null where id = #{issue.id}")
       end
       issue
     end
