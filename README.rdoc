@@ -16,7 +16,6 @@ Migration FIXMEs
 
 * issues not being assigned?  why does user102@example.org/password have no issues here /my/page
 * need to populate activity, e.g., /projects/support/activity
-* need to enable certain modules for projects, i.e., /projects/support/settings
 
 Redmine FIXMEs
 * will need to modify Redmine auth to use MD5 since that's what GForge uses

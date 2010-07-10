@@ -60,6 +60,8 @@ namespace :redmine do
         :status => gforge_group.redmine_status,
         :identifier => gforge_group.unix_group_name
       )
+      project.enabled_modules.create!(:name => "issue_tracking") if gforge_group.use_tracker
+      project.enabled_modules.create!(:name => "boards") if gforge_group.use_forum
       gforge_group.user_group.each do |user_group|
         user = create_or_fetch_user(user_group.user)
         if user_group.group_admin?
