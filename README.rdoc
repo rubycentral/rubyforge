@@ -17,7 +17,6 @@ Migration FIXMEs
 * need to upgrade base redmine to latest release - 0.9.5
 * why does user102@example.org/password have no issues here /my/page
 * need to populate activity, e.g., /projects/support/activity
-* artifact status is always set to 'new'
 
 Redmine FIXMEs
 * will need to modify Redmine auth to use MD5 since that's what GForge uses
