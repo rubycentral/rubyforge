@@ -29,6 +29,7 @@ module GForgeMigrate
     set_primary_key "group_forum_id"
     belongs_to :group, :class_name => "GForgeGroup"
     has_many :forum_messages, :class_name => "GForgeForumMessage", :foreign_key => "group_forum_id"
+    named_scope :active, :conditions => "is_public != 9"
     def convert_to_redmine_board_in(project)
       # I don't see an equivalent to allow_anonymous, is_public, or send_all_posts_to
       project.boards.create!(:name => forum_name, :description => (description.blank? ? "None" : description))

@@ -90,7 +90,7 @@ namespace :redmine do
           end
         end
       end
-      gforge_group.forum_groups.each do |forum_group|
+      gforge_group.forum_groups.active.each do |forum_group|
         board = forum_group.convert_to_redmine_board_in(project)
         board_threads = {}
         forum_group.forum_messages.each do |forum_message|
