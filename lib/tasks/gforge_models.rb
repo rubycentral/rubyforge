@@ -11,6 +11,7 @@ module GForgeMigrate
     has_many :users, :through => :user_group
     has_many :artifact_group_lists, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_id'
     has_many :forum_groups, :class_name => "GForgeForumGroup", :foreign_key => 'group_id'
+    has_many :document_groups, :class_name => "GForgeDocumentGroup", :foreign_key => 'group_id'
     named_scope :active, :conditions => {:status => 'A'}
     named_scope :non_system, :conditions => 'group_id > 4'
     def redmine_status
@@ -121,6 +122,19 @@ module GForgeMigrate
         else "Bug"
       end
     end
+  end
+  
+  class GForgeDocumentGroup < GForgeTable
+    set_table_name "doc_groups"
+    set_primary_key "doc_group"
+    belongs_to :group, :class_name => "GForgeGroup", :foreign_key => 'group_id'
+    has_many :documents, :class_name => "GForgeDocument", :foreign_key => 'doc_group'
+  end
+  
+  class GForgeDocument < GForgeTable
+    set_table_name "doc_data"
+    belongs_to :group, :class_name => "GForgeGroup", :foreign_key => 'group_id'
+    belongs_to :document_group, :class_name => "GForgeDocumentGroup", :foreign_key => 'doc_group'
   end
   
   class GForgeArtifactMonitor < GForgeTable
