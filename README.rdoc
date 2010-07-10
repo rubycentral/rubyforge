@@ -64,8 +64,8 @@ Some notes on the differences between the GForge and the Redmine object models:
   artifact_extra_field_elements
   artifact_extra_field_list
   artifact_file
-  artifact_group               boards
-  artifact_group_list          boards
+  artifact_group               
+  artifact_group_list          project_trackers
   artifact_history
   artifact_message             journals
   artifact_monitor             watchers
@@ -79,7 +79,7 @@ Some notes on the differences between the GForge and the Redmine object models:
   doc_groups
   doc_states
   filemodule_monitor
-  forum
+  forum                        boards
   forum_agg_msg_count
   forum_group_list
   forum_monitored_forums
@@ -96,23 +96,11 @@ Some notes on the differences between the GForge and the Redmine object models:
   group_cvs_history
   group_history
   group_plugin
-  groups                     projects
+  groups                       projects
   licenses
   mail_group_list
-  massmail_queue
   news_bytes
-  people_job
-  people_job_category
-  people_job_inventory
-  people_job_status
-  people_skill
-  people_skill_inventory
-  people_skill_level
-  people_skill_year
   plugins
-  prdb_dbs
-  prdb_states
-  prdb_types
   project_assigned_to
   project_category
   project_counts_agg
@@ -132,6 +120,42 @@ Some notes on the differences between the GForge and the Redmine object models:
   project_task_external_order
   project_weekly_metric
   prweb_vhost
+  role
+  role_setting
+  schema_migrations
+  themes
+  trove_agg
+  trove_cat
+  trove_group_link
+  trove_treesums
+  user_bookmarks
+  user_group                   members,member_roles
+  user_plugin
+  user_preferences
+  users                      users,user_preferences
+
+
+=== Tables that won't be migrated
+  activity_log               
+  activity_log_old           
+  activity_log_old_old       
+  api_requests                 
+  cron_history
+  disk_usages                
+  gem_namespace_ownerships   
+  massmail_queue
+  mirrors  
+  people_job
+  people_job_category
+  people_job_inventory
+  people_job_status
+  people_skill
+  people_skill_inventory
+  people_skill_level
+  people_skill_year
+  prdb_dbs - empty in the RubyForge DB
+  prdb_states - empty in the RubyForge DB
+  prdb_types - empty in the RubyForge DB
   rep_group_act_daily
   rep_group_act_monthly
   rep_group_act_weekly
@@ -152,11 +176,13 @@ Some notes on the differences between the GForge and the Redmine object models:
   rep_users_cum_daily
   rep_users_cum_monthly
   rep_users_cum_weekly
-  role
-  role_setting
-  schema_migrations
   skills_data
   skills_data_types
+  snippet
+  snippet_package
+  snippet_package_item
+  snippet_package_version
+  snippet_version
   stats_agg_logo_by_day
   stats_agg_logo_by_group
   stats_agg_pages_by_day
@@ -172,35 +198,6 @@ Some notes on the differences between the GForge and the Redmine object models:
   stats_site_pages_by_day
   stats_site_pages_by_month
   stats_subd_pages
-  themes
-  trove_agg
-  trove_cat
-  trove_group_link
-  trove_treesums
-  user_bookmarks
-  user_group                 members,member_roles
-  user_metric
-  user_metric0
-  user_metric_history
-  user_plugin
-  user_preferences
-  users                      users,user_preferences
-
-
-=== Tables that won't be migrated
-  activity_log               
-  activity_log_old           
-  activity_log_old_old       
-  api_requests                 
-  cron_history
-  disk_usages                
-  gem_namespace_ownerships   
-  mirrors                    
-  snippet
-  snippet_package
-  snippet_package_item
-  snippet_package_version
-  snippet_version
   supported_languages - there's a foreign key to this table from users, and that data is captured in redmine's users.language field
   survey_question_types
   survey_questions
@@ -210,6 +207,9 @@ Some notes on the differences between the GForge and the Redmine object models:
   surveys
   user_diary
   user_diary_monitor
+  user_metric - empty in the RubyForge DB
+  user_metric0 - empty in the RubyForge DB
+  user_metric_history - empty in the RubyForge DB
   user_ratings
   user_session
   user_type
