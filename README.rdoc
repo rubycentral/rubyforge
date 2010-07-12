@@ -17,6 +17,10 @@ Migration FIXMEs
 * need to upgrade base redmine to latest release - 0.9.5
 * why does user102@example.org/password have no issues here /my/page
 * need to populate activity, e.g., /projects/support/activity
+* some message threads have missing messages after migration, e.g.
+http://rubyforge.org/forum/message.php?msg_id=92
+vs
+http://localhost:3000/boards/1/topics/13
 
 Redmine FIXMEs
 * will need to modify Redmine auth to use MD5 since that's what GForge uses
