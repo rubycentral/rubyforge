@@ -99,7 +99,15 @@ namespace :redmine do
           end
           board_threads[forum_message.id] = message
           if forum_message.is_followup_to
-            message.parent = board_threads[forum_message.is_followup_to]
+            possible_parent = board_threads[forum_message.is_followup_to]
+            # Redmine has flat message replies, GForge has nested replies
+            # See http://www.redmine.org/boards/1/topics/15509 for more details
+            # So, flattening the GForge threads
+            if possible_parent && possible_parent.parent
+              message.parent = possible_parent.parent
+            else
+              message.parent = possible_parent
+            end
             message.save!
           end
         end
