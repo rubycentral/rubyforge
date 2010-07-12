@@ -59,14 +59,9 @@ Some notes on the differences between the GForge and the Redmine object models:
 
 === GForge table to Redmine table mapping
   artifact                     issues
-  artifact_canned_responses      
   artifact_category            issue_categories
-  artifact_counts_agg
-  artifact_extra_field_data
-  artifact_extra_field_elements
-  artifact_extra_field_list
   artifact_file
-  artifact_group               
+  artifact_group               project_trackers
   artifact_group_list          project_trackers
   artifact_history
   artifact_message             journals
@@ -81,9 +76,9 @@ Some notes on the differences between the GForge and the Redmine object models:
   doc_groups
   doc_states
   filemodule_monitor
-  forum                        boards
+  forum                        messages
   forum_agg_msg_count
-  forum_group_list
+  forum_group_list             boards
   forum_monitored_forums
   forum_perm
   forum_saved_place
@@ -103,7 +98,6 @@ Some notes on the differences between the GForge and the Redmine object models:
   mail_group_list
   news_bytes
   plugins
-  project_assigned_to
   project_category
   project_counts_agg
   project_dependencies
@@ -117,11 +111,7 @@ Some notes on the differences between the GForge and the Redmine object models:
   project_perm
   project_status
   project_sums_agg
-  project_task
-  project_task_artifact
-  project_task_external_order
   project_weekly_metric
-  prweb_vhost
   role
   role_setting
   schema_migrations
@@ -138,10 +128,16 @@ Some notes on the differences between the GForge and the Redmine object models:
 
 
 === Tables that won't be migrated
+  artifact_canned_responses      
   activity_log               
   activity_log_old           
-  activity_log_old_old       
+  activity_log_old_old    
   api_requests                 
+  artifact_canned_responses - couldn't find a redmine equivalent for this, although it is quite handy
+  artifact_counts_agg
+  artifact_extra_field_data
+  artifact_extra_field_elements
+  artifact_extra_field_list
   cron_history
   disk_usages                
   gem_namespace_ownerships   
@@ -158,6 +154,11 @@ Some notes on the differences between the GForge and the Redmine object models:
   prdb_dbs - empty in the RubyForge DB
   prdb_states - empty in the RubyForge DB
   prdb_types - empty in the RubyForge DB
+  project_assigned_to - part of task system
+  project_task
+  project_task_artifact
+  project_task_external_order
+  prweb_vhost
   rep_group_act_daily
   rep_group_act_monthly
   rep_group_act_weekly
