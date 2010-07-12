@@ -93,7 +93,7 @@ namespace :redmine do
       gforge_group.forum_groups.active.each do |forum_group|
         board = forum_group.convert_to_redmine_board_in(project)
         board_threads = {}
-        forum_group.forum_messages.each do |forum_message|
+        forum_group.forum_messages.find(:all, :order => "msg_id asc").each do |forum_message|
           message = showing_migrated_ids(forum_message) do 
             forum_message.convert_to_redmine_message_in(board)
           end
