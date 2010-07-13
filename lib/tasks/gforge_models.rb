@@ -108,7 +108,7 @@ module GForgeMigrate
     set_primary_key 'language_id'
     set_table_name 'supported_languages'
   end
-
+  
   class GForgeArtifactGroupList < GForgeTable
     set_primary_key 'group_artifact_id'
     set_table_name 'artifact_group_list'
@@ -155,6 +155,11 @@ module GForgeMigrate
       Journal.create!(:journalized_type => "Issue", :journalized_id => issue.id, :user => create_or_fetch_user(user), :notes => body, :created_on => Time.at(adddate))
     end
   end
+  
+  class GForgeArtifactFile < GForgeTable
+    set_table_name 'artifact_file'
+    belongs_to :artifact, :class_name => "GForgeArtifact", :foreign_key => 'artifact_id'
+  end
 
   class GForgeArtifact < GForgeTable
     # TODO it looks like the Redmine equivalent of artifact_history is the combination of journal and journal entries.  Is it worthwhile to migrate over that data?
@@ -166,6 +171,7 @@ module GForgeMigrate
     belongs_to :category, :class_name => "GForgeArtifactCategory", :foreign_key => 'category_id'
     has_many :monitors, :class_name => "GForgeArtifactMonitor", :foreign_key => 'artifact_id'
     has_many :messages, :class_name => "GForgeArtifactMessage", :foreign_key => 'artifact_id'
+    has_many :files, :class_name => "GForgeArtifactFile", :foreign_key => 'artifact_id'
     def convert_to_redmine_issue_in(project)
       # I don't see a Redmine equivalent for these fields: resolution_id, close_date
       issue = Issue.new(
