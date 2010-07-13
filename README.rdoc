@@ -14,7 +14,7 @@ I'm thinking about running the migration one project at a time.  So the script g
 
 Migration FIXMEs
 
-* need to upgrade base redmine to latest release - 0.9.5
+* need to upgrade base redmine to latest release - 0.9.6
 * why does user102@example.org/password have no issues here /my/page
 * need to populate activity, e.g., /projects/support/activity
 
