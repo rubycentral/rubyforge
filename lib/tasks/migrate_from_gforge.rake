@@ -88,6 +88,11 @@ namespace :redmine do
               artifact_message.convert_to_redmine_journal_on(issue)
             end
           end
+          artifact.files.each do |artifact_file|
+            showing_migrated_ids(artifact_file) do |artifact_file|
+              artifact_file.convert_to_redmine_attachment_to(issue)
+            end
+          end
         end
       end
       gforge_group.forum_groups.active.each do |forum_group|

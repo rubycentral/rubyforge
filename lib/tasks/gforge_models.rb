@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module GForgeMigrate
 
   class GForgeTable < ActiveRecord::Base
@@ -159,6 +161,25 @@ module GForgeMigrate
   class GForgeArtifactFile < GForgeTable
     set_table_name 'artifact_file'
     belongs_to :artifact, :class_name => "GForgeArtifact", :foreign_key => 'artifact_id'
+    belongs_to :user, :class_name => "GForgeUser", :foreign_key => 'submitted_by'
+    def convert_to_redmine_attachment_to(issue)
+      file = ActionController::UploadedTempfile.new(filename)
+      file.binmode
+      file.write(extract_content)
+      file.original_path = filename
+      file.rewind
+      attachment = issue.attachments.create!(
+        :description => description,
+        :created_on => Time.at(adddate),
+        :author => create_or_fetch_user(user),
+        :file => file
+      )
+      file.close!
+      attachment
+    end
+    def extract_content
+      Base64.decode64(bin_data)
+    end
   end
 
   class GForgeArtifact < GForgeTable

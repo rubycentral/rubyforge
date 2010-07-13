@@ -53,14 +53,14 @@ Some notes on the differences between the GForge and the Redmine object models:
 
 * GForge stores the user language setting as a foreign key into the <tt>supported_languages</tt> table.  Redmine stores it as a two letter string (e.g., 'en') in <tt>users.language</tt>.
 * The GForge <tt>artifact_group_list</tt> table gets mapped into rows in the Redmine <tt>projects_trackers</tt> table (<tt>projects</tt> HABTM <tt>trackers</tt>).  Redmine <tt>trackers</tt> are not per <tt>project</tt>; they are shared for the whole system.  The current migration only provisions rows in the <tt>projects_trackers</tt> table as they are needed - e.g., a <tt>project</tt> won't get a "Bug" <tt>tracker</tt> unless there's a GForge <tt>artifact</tt> in a "Bug" GForge <tt>artifact_group_list</tt> in this project.  If there's a GForge <tt>artifact_group_list</tt> with an unexpected name (e.g., "Tom's Issues") those get mapped into the "Bug" <tt>tracker</tt>.
-* GForge <tt>artifacts</tt> have only three statuses (open/closed/deleted) whereas Redmine issues have six possible <tt>IssueStatus</tt> settings, so I just map them over to the <tt>IssueStatus</tt> with the same name.  GForge <tt>artifacts</tt> have five priority levels; these map onto Redmine's five standard <tt>IssueCategory</tt> values.
+* GForge <tt>artifacts</tt> have only three statuses (open/closed/deleted) whereas Redmine issues have six possible <tt>IssueStatus</tt> settings, so I just map them over to the <tt>IssueStatus</tt> with the same name.  GForge <tt>artifacts</tt> have five priority levels; these map onto Redmine's five standard <tt>IssueCategory</tt> values.  GForge base64 encodes artifact files; Redmine stores the metadata as an <tt>Attachment</tt> and stores the data in the <tt>RAILS_ROOT/files</tt> directory.
 * The GForge forum system handles nested message threads whereas Redmine forum threads are flat (details at http://www.redmine.org/boards/1/topics/15509).  So there's some lost information there, but, meh.
 
 
 === GForge table to Redmine table mapping
   artifact                     issues
   artifact_category            issue_categories
-  artifact_file
+  artifact_file                attachments
   artifact_group               project_trackers
   artifact_group_list          project_trackers
   artifact_history
