@@ -36,7 +36,7 @@ password_min_length:
   default: 4
 attachment_max_size:
   format: int
-  default: 5120
+  default: 30000
 issues_export_limit:
   format: int
   default: 500
