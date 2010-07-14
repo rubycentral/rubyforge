@@ -93,6 +93,11 @@ namespace :redmine do
               artifact_file.convert_to_redmine_attachment_to(issue)
             end
           end
+          artifact.histories.find(:all, :order => "entrydate asc").each do |artifact_history|
+            showing_migrated_ids(artifact_history) do |artifact_history|
+              artifact_history.convert_to_redmine_journal_on(issue)
+            end
+          end
         end
       end
       gforge_group.forum_groups.active.each do |forum_group|

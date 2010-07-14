@@ -154,7 +154,18 @@ module GForgeMigrate
     belongs_to :artifact, :class_name => "GForgeArtifact"
     belongs_to :user, :class_name => 'GForgeUser', :foreign_key => 'submitted_by'
     def convert_to_redmine_journal_on(issue)
-      Journal.create!(:journalized_type => "Issue", :journalized_id => issue.id, :user => create_or_fetch_user(user), :notes => body, :created_on => Time.at(adddate))
+      journal = issue.journals.create!(:user => create_or_fetch_user(user), :notes => body, :created_on => Time.at(adddate))
+    end
+  end
+  
+  class GForgeArtifactHistory < GForgeTable
+    set_table_name 'artifact_history'
+    belongs_to :artifact, :class_name => "GForgeArtifact", :foreign_key => 'artifact_id'
+    belongs_to :user, :class_name => "GForgeUser", :foreign_key => 'mod_by'
+    def convert_to_redmine_journal_on(issue)
+      journal = issue.journals.create!(:user => create_or_fetch_user(user), :notes => "", :created_on => Time.at(entrydate))
+      journal_detail = journal.details.create!(:property => "attr", :prop_key => field_name, :old_value => old_value, :value => old_value)
+      journal
     end
   end
   
@@ -193,6 +204,7 @@ module GForgeMigrate
     has_many :monitors, :class_name => "GForgeArtifactMonitor", :foreign_key => 'artifact_id'
     has_many :messages, :class_name => "GForgeArtifactMessage", :foreign_key => 'artifact_id'
     has_many :files, :class_name => "GForgeArtifactFile", :foreign_key => 'artifact_id'
+    has_many :histories, :class_name => "GForgeArtifactHistory", :foreign_key => 'artifact_id'
     def convert_to_redmine_issue_in(project)
       # I don't see a Redmine equivalent for these fields: resolution_id, close_date
       issue = Issue.new(

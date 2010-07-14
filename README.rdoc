@@ -66,9 +66,7 @@ Some notes on the differences between the GForge and the Redmine object models:
   artifact_history
   artifact_message             journals
   artifact_monitor             watchers
-  artifact_perm
-  artifact_resolution
-  artifact_status
+  artifact_status              enumerations
   canned_responses
   country_code
   db_images
@@ -138,6 +136,8 @@ Some notes on the differences between the GForge and the Redmine object models:
   artifact_extra_field_data
   artifact_extra_field_elements
   artifact_extra_field_list
+  artifact_perm - I'm not quite sure how this is used in GForge... but I don't see an equivalent in redmine for tracker-specific permissions (?)
+  artifact_resolution
   cron_history
   disk_usages                
   gem_namespace_ownerships   
