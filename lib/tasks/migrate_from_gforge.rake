@@ -62,7 +62,7 @@ namespace :redmine do
       )
       project.enabled_modules.create!(:name => "issue_tracking") if gforge_group.use_tracker
       project.enabled_modules.create!(:name => "boards") if gforge_group.use_forum
-      project.enabled_modules.create!(:name => "document") if gforge_group.use_docman
+      project.enabled_modules.create!(:name => "documents") if gforge_group.use_docman
       gforge_group.user_group.each do |user_group|
         user = create_or_fetch_user(user_group.user)
         if user_group.group_admin?
@@ -75,6 +75,11 @@ namespace :redmine do
       gforge_group.document_groups.each do |document_group|
         document_category = showing_migrated_ids(project) do
           document_group.convert_to_redmine_document_category_on(project)
+        end
+        document_group.documents.each do |gforge_document|
+          gforge_document = showing_migrated_ids(document_category) do 
+            gforge_document.convert_to_redmine_document_in(document_category)
+          end
         end
       end
       gforge_group.artifact_group_lists.each do |artifact_group_list|

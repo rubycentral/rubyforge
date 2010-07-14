@@ -148,8 +148,31 @@ module GForgeMigrate
     #        5 | private
     set_table_name "doc_data"
     belongs_to :group, :class_name => "GForgeGroup", :foreign_key => 'group_id'
+    belongs_to :user, :class_name => "GForgeUser", :foreign_key => 'created_by'
     belongs_to :document_group, :class_name => "GForgeDocumentGroup", :foreign_key => 'doc_group'
     named_scope :not_deleted, :conditions => "stateid != 2"
+    def convert_to_redmine_document_in(document_category)
+      document = document_category.project.documents.create!(:category => document_category, :title => title, :description => description, :created_on => Time.at(updatedate))
+      if filetype == "URL"
+        file = ActionController::UploadedTempfile.new(filename.gsub(/[^a-z]/, ""))
+        file.binmode
+        file.write(filename)
+        file.original_path = filename.gsub(/[^a-z]/, "")
+        file.rewind
+      else
+        # refactor this into a create_uploaded_temp_file_from(self)
+        file = ActionController::UploadedTempfile.new(filename)
+        file.binmode
+        file.write(extract_content)
+        file.original_path = filename
+        file.rewind
+      end
+      attachment = document.attachments.create!(:description => description, :created_on => Time.at(updatedate), :author => create_or_fetch_user(user), :file => file)
+      document
+    end
+    def extract_content
+      Base64.decode64(data)
+    end
   end
   
   class GForgeArtifactMonitor < GForgeTable
