@@ -132,12 +132,24 @@ module GForgeMigrate
     set_primary_key "doc_group"
     belongs_to :group, :class_name => "GForgeGroup", :foreign_key => 'group_id'
     has_many :documents, :class_name => "GForgeDocument", :foreign_key => 'doc_group'
+    def convert_to_redmine_document_category_on(project)
+      DocumentCategory.create!(:name => groupname, :project => project)
+    end
   end
   
   class GForgeDocument < GForgeTable
+    # gforge=> select * from doc_states;
+    #  stateid |  name   
+    # ---------+---------
+    #        1 | active
+    #        2 | deleted
+    #        3 | pending
+    #        4 | hidden
+    #        5 | private
     set_table_name "doc_data"
     belongs_to :group, :class_name => "GForgeGroup", :foreign_key => 'group_id'
     belongs_to :document_group, :class_name => "GForgeDocumentGroup", :foreign_key => 'doc_group'
+    named_scope :not_deleted, :conditions => "stateid != 2"
   end
   
   class GForgeArtifactMonitor < GForgeTable

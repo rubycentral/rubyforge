@@ -72,6 +72,11 @@ namespace :redmine do
         end
         Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name(role_name).id])
       end
+      gforge_group.document_groups.each do |document_group|
+        document_category = showing_migrated_ids(project) do
+          document_group.convert_to_redmine_document_category_on(project)
+        end
+      end
       gforge_group.artifact_group_lists.each do |artifact_group_list|
         project.trackers << Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name) unless project.trackers.find_by_name(artifact_group_list.corresponding_redmine_tracker_name)
         artifact_group_list.artifacts.each do |artifact|
