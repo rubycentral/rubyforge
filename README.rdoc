@@ -67,8 +67,6 @@ Some notes on the differences between the GForge and the Redmine object models:
   artifact_message             journals
   artifact_monitor             watchers
   artifact_status              enumerations
-  country_code
-  db_images
   doc_data
   doc_groups
   doc_states
@@ -130,15 +128,17 @@ Some notes on the differences between the GForge and the Redmine object models:
   activity_log_old           
   activity_log_old_old    
   api_requests                 
-  artifact_canned_responses - couldn't find a redmine equivalent for this, although it is quite handy
+  artifact_canned_responses - couldn't find a Redmine equivalent for this, although it is quite handy
   artifact_counts_agg
   artifact_extra_field_data
   artifact_extra_field_elements
   artifact_extra_field_list
-  artifact_perm - I'm not quite sure how this is used in GForge... but I don't see an equivalent in redmine for tracker-specific permissions (?)
+  artifact_perm - I'm not quite sure how this is used in GForge... but I don't see an equivalent in Redmine for tracker-specific permissions (?)
   artifact_resolution
   canned_responses - This table has only 1 record in the RubyForge DB
+  country_code - these aren't tracked in Redmine
   cron_history
+  db_images - This table has only 1 record in the RubyForge DB
   disk_usages                
   gem_namespace_ownerships   
   massmail_queue
