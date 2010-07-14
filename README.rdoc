@@ -63,7 +63,7 @@ Some notes on the differences between the GForge and the Redmine object models:
   artifact_file                attachments
   artifact_group               project_trackers
   artifact_group_list          project_trackers
-  artifact_history	           journals, journal_details
+  artifact_history             journals, journal_details
   artifact_message             journals
   artifact_monitor             watchers
   artifact_status              enumerations
