@@ -68,8 +68,7 @@ Some notes on the differences between the GForge and the Redmine object models:
   artifact_monitor             watchers
   artifact_status              enumerations
   doc_data
-  doc_groups
-  doc_states
+  doc_groups                   document_categories
   filemodule_monitor
   forum                        messages
   forum_agg_msg_count
@@ -139,6 +138,7 @@ Some notes on the differences between the GForge and the Redmine object models:
   country_code - these aren't tracked in Redmine
   cron_history
   db_images - This table has only 1 record in the RubyForge DB
+  doc_states - We're not migrating 'deleted' documents, and all others are just put in the public
   disk_usages                
   gem_namespace_ownerships   
   massmail_queue
