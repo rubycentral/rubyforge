@@ -75,11 +75,9 @@ Some notes on the differences between the GForge and the Redmine object models:
   forum_group_list             boards
   forum_monitored_forums       watchers
   frs_dlstats_filetotal_agg
-  frs_file
+  frs_file                     attachments
   frs_filetype
-  frs_package
   frs_processor
-  frs_release
   frs_status
   group_cvs_history
   group_history
@@ -135,6 +133,8 @@ Some notes on the differences between the GForge and the Redmine object models:
   forum_perm - How is this used in GForge?
   forum_saved_place
   frs_dlstats_file
+  frs_package - Rolled up into the frs_file => attachments conversion
+  frs_release - Rolled up into the frs_file => attachments conversion
   gem_namespace_ownerships   
   massmail_queue
   mirrors  
