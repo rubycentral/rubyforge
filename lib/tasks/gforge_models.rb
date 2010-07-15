@@ -14,6 +14,7 @@ module GForgeMigrate
     has_many :artifact_group_lists, :class_name => "GForgeArtifactGroupList", :foreign_key => 'group_id'
     has_many :forum_groups, :class_name => "GForgeForumGroup", :foreign_key => 'group_id'
     has_many :document_groups, :class_name => "GForgeDocumentGroup", :foreign_key => 'group_id'
+    has_many :packages, :class_name => "GForgePackage", :foreign_key => 'group_id'
     named_scope :active, :conditions => {:status => 'A'}
     named_scope :non_system, :conditions => 'group_id > 4'
     def redmine_status
@@ -305,6 +306,29 @@ module GForgeMigrate
     set_table_name 'artifact_category'
     belongs_to :auto_assign_to, :class_name => 'GForgeUser', :foreign_key => 'auto_assign_to'
     has_many :artifacts, :class_name => "GForgeArtifact", :foreign_key => "category_id"
+  end
+  
+  class GForgePackage < GForgeTable
+    set_table_name 'frs_package'
+    set_primary_key 'package_id'
+    belongs_to :group, :class_name => "GForgeGroup", :foreign_key => 'group_id'
+    has_many :releases, :class_name => "GForgeRelease", :foreign_key => 'package_id'
+  end
+  
+  class GForgeRelease < GForgeTable
+    set_table_name 'frs_release'
+    set_primary_key 'release_id'
+    belongs_to :package, :class_name => "GForgePackage", :foreign_key => 'package_id'
+    belongs_to :released_by, :class_name => 'GForgeUser', :foreign_key => 'released_by'
+    has_many :files, :class_name => 'GForgeFile', :foreign_key => 'release_id'
+  end
+  
+  class GForgeFile < GForgeTable
+    set_primary_key "file_id"
+    set_table_name "frs_file"
+    belongs_to :release, :class_name => "GForgeRelease", :foreign_key => 'release_id'
+    #belongs_to :file_type, :foreign_key => 'type_id'
+    #belongs_to :processor
   end
   
   # I experimented with memoizing this method, but it actually slowed the migration down
