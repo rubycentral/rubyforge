@@ -73,11 +73,11 @@ namespace :redmine do
         Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name(role_name).id])
       end
       gforge_group.document_groups.each do |document_group|
-        document_category = showing_migrated_ids(project) do
+        document_category = showing_migrated_ids(document_group) do
           document_group.convert_to_redmine_document_category_on(project)
         end
         document_group.documents.each do |gforge_document|
-          gforge_document = showing_migrated_ids(document_category) do 
+          gforge_document = showing_migrated_ids(gforge_document) do 
             gforge_document.convert_to_redmine_document_in(document_category)
           end
         end
@@ -89,22 +89,22 @@ namespace :redmine do
             artifact.convert_to_redmine_issue_in(project)
           end
           artifact.monitors.each do |artifact_monitor|
-            showing_migrated_ids(artifact_monitor) do |artifact_monitor|
+            showing_migrated_ids(artifact_monitor) do
               artifact_monitor.convert_to_redmine_watcher_on(issue)
             end
           end
           artifact.messages.each do |artifact_message|
-            showing_migrated_ids(artifact_message) do |artifact_message|
+            showing_migrated_ids(artifact_message) do
               artifact_message.convert_to_redmine_journal_on(issue)
             end
           end
           artifact.files.each do |artifact_file|
-            showing_migrated_ids(artifact_file) do |artifact_file|
+            showing_migrated_ids(artifact_file) do
               artifact_file.convert_to_redmine_attachment_to(issue)
             end
           end
           artifact.histories.find(:all, :order => "entrydate asc").each do |artifact_history|
-            showing_migrated_ids(artifact_history) do |artifact_history|
+            showing_migrated_ids(artifact_history) do
               artifact_history.convert_to_redmine_journal_on(issue)
             end
           end
@@ -129,6 +129,11 @@ namespace :redmine do
               message.parent = possible_parent
             end
             message.save!
+          end
+        end
+        forum_group.monitors.each do |monitor|
+          showing_migrated_ids(monitor) do
+            monitor.convert_to_redmine_watcher_on(board)
           end
         end
       end

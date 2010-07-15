@@ -31,6 +31,7 @@ module GForgeMigrate
     set_primary_key "group_forum_id"
     belongs_to :group, :class_name => "GForgeGroup"
     has_many :forum_messages, :class_name => "GForgeForumMessage", :foreign_key => "group_forum_id"
+    has_many :monitors, :class_name => "GForgeForumMonitoredForum", :foreign_key => "forum_id"
     named_scope :active, :conditions => "is_public != 9"
     def convert_to_redmine_board_in(project)
       # I don't see an equivalent to allow_anonymous, is_public, or send_all_posts_to
@@ -53,6 +54,16 @@ module GForgeMigrate
       )
       message.save!
       message
+    end
+  end
+  
+  class GForgeForumMonitoredForum < GForgeTable
+    set_table_name 'forum_monitored_forums'
+    set_primary_key 'monitor_id'
+    belongs_to :user, :class_name => "GForgeUser", :foreign_key => 'user_id'
+    belongs_to :forum_group, :class_name => "GForgeForumGroup", :foreign_key => "forum_id"
+    def convert_to_redmine_watcher_on(board)
+      board.watchers.create!(:user => create_or_fetch_user(user))
     end
   end
 
