@@ -97,25 +97,19 @@ Some notes on the differences between the GForge and the Redmine object models:
   project_group_list
   project_history
   project_messages
-  project_metric
-  project_metric_tmp1
   project_perm
   project_status
   project_sums_agg
   project_weekly_metric
   role
   role_setting
-  schema_migrations
-  themes
   trove_agg
   trove_cat
   trove_group_link
   trove_treesums
-  user_bookmarks
   user_group                   members,member_roles
   user_plugin
-  user_preferences
-  users                      users,user_preferences
+  users                        users,user_preferences
 
 
 === Tables that won't be migrated
@@ -156,6 +150,8 @@ Some notes on the differences between the GForge and the Redmine object models:
   prdb_states - empty in the RubyForge DB
   prdb_types - empty in the RubyForge DB
   project_assigned_to - part of task system
+  project_metric
+  project_metric_tmp1
   project_task
   project_task_artifact
   project_task_external_order
@@ -180,6 +176,7 @@ Some notes on the differences between the GForge and the Redmine object models:
   rep_users_cum_daily
   rep_users_cum_monthly
   rep_users_cum_weekly
+  schema_migrations
   skills_data
   skills_data_types
   snippet
@@ -209,11 +206,14 @@ Some notes on the differences between the GForge and the Redmine object models:
   survey_rating_response
   survey_responses
   surveys
+  themes
+  user_bookmarks - only 35 rows in the RubyForge DB... and the settings are RubyForge-specific anyway
   user_diary
   user_diary_monitor
   user_metric - empty in the RubyForge DB
   user_metric0 - empty in the RubyForge DB
   user_metric_history - empty in the RubyForge DB
+  user_preferences - only 69 rows in the RubyForge DB... and the settings are RubyForge-specific anyway
   user_ratings
   user_session
   user_type
