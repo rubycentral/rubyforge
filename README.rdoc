@@ -74,9 +74,6 @@ Some notes on the differences between the GForge and the Redmine object models:
   forum                        messages
   forum_group_list             boards
   forum_monitored_forums       watchers
-  forum_perm
-  forum_saved_place
-  frs_dlstats_file
   frs_dlstats_filetotal_agg
   frs_file
   frs_filetype
@@ -127,20 +124,23 @@ Some notes on the differences between the GForge and the Redmine object models:
   activity_log_old           
   activity_log_old_old    
   api_requests                 
-  artifact_canned_responses - couldn't find a Redmine equivalent for this, although it is quite handy
+  artifact_canned_responses - Couldn't find a Redmine equivalent for this, although it is quite handy
   artifact_counts_agg
   artifact_extra_field_data
   artifact_extra_field_elements
   artifact_extra_field_list
-  artifact_perm - I'm not quite sure how this is used in GForge... but I don't see an equivalent in Redmine for tracker-specific permissions (?)
+  artifact_perm - How is this used in GForge... and I don't see an equivalent in Redmine for tracker-specific permissions (?)
   artifact_resolution
   canned_responses - This table has only 1 record in the RubyForge DB
-  country_code - these aren't tracked in Redmine
+  country_code - These aren't tracked in Redmine
   cron_history
   db_images - This table has only 1 record in the RubyForge DB
   doc_states - We're not migrating 'deleted' documents, and all others are just put in the public
   disk_usages                
   forum_agg_msg_count
+  forum_perm - How is this used in GForge?
+  forum_saved_place
+  frs_dlstats_file
   gem_namespace_ownerships   
   massmail_queue
   mirrors  
