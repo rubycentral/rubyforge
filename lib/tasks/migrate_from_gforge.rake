@@ -73,40 +73,26 @@ namespace :redmine do
         Member.create!(:principal => user, :project => project, :role_ids => [Role.find_by_name(role_name).id])
       end
       gforge_group.document_groups.each do |document_group|
-        document_category = showing_migrated_ids(document_group) do
-          document_group.convert_to_redmine_document_category_on(project)
-        end
+        document_category = showing_migrated_ids(document_group) { document_group.convert_to_redmine_document_category_on(project) }
         document_group.documents.each do |gforge_document|
-          gforge_document = showing_migrated_ids(gforge_document) do 
-            gforge_document.convert_to_redmine_document_in(document_category)
-          end
+           showing_migrated_ids(gforge_document) { gforge_document.convert_to_redmine_document_in(document_category) }
         end
       end
       gforge_group.artifact_group_lists.each do |artifact_group_list|
         project.trackers << Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name) unless project.trackers.find_by_name(artifact_group_list.corresponding_redmine_tracker_name)
         artifact_group_list.artifacts.each do |artifact|
-          issue = showing_migrated_ids(artifact) do
-            artifact.convert_to_redmine_issue_in(project)
-          end
+          issue = showing_migrated_ids(artifact) { artifact.convert_to_redmine_issue_in(project) }
           artifact.monitors.each do |artifact_monitor|
-            showing_migrated_ids(artifact_monitor) do
-              artifact_monitor.convert_to_redmine_watcher_on(issue)
-            end
+            showing_migrated_ids(artifact_monitor) { artifact_monitor.convert_to_redmine_watcher_on(issue) }
           end
           artifact.messages.each do |artifact_message|
-            showing_migrated_ids(artifact_message) do
-              artifact_message.convert_to_redmine_journal_on(issue)
-            end
+            showing_migrated_ids(artifact_message) { artifact_message.convert_to_redmine_journal_on(issue) }
           end
           artifact.files.each do |artifact_file|
-            showing_migrated_ids(artifact_file) do
-              artifact_file.convert_to_redmine_attachment_to(issue)
-            end
+            showing_migrated_ids(artifact_file) { artifact_file.convert_to_redmine_attachment_to(issue)  }
           end
           artifact.histories.find(:all, :order => "entrydate asc").each do |artifact_history|
-            showing_migrated_ids(artifact_history) do
-              artifact_history.convert_to_redmine_journal_on(issue)
-            end
+            showing_migrated_ids(artifact_history) { artifact_history.convert_to_redmine_journal_on(issue) }
           end
         end
       end
@@ -114,9 +100,7 @@ namespace :redmine do
         board = forum_group.convert_to_redmine_board_in(project)
         board_threads = {}
         forum_group.forum_messages.find(:all, :order => "msg_id asc").each do |forum_message|
-          message = showing_migrated_ids(forum_message) do 
-            forum_message.convert_to_redmine_message_in(board)
-          end
+          message = showing_migrated_ids(forum_message) { forum_message.convert_to_redmine_message_in(board) }
           board_threads[forum_message.id] = message
           if forum_message.is_followup_to
             possible_parent = board_threads[forum_message.is_followup_to]
@@ -132,9 +116,7 @@ namespace :redmine do
           end
         end
         forum_group.monitors.each do |monitor|
-          showing_migrated_ids(monitor) do
-            monitor.convert_to_redmine_watcher_on(board)
-          end
+          showing_migrated_ids(monitor) { monitor.convert_to_redmine_watcher_on(board) }
         end
       end
     #end
