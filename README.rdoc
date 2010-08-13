@@ -49,6 +49,8 @@ I found it helpful to add this to my <tt>~/.railsrc</tt>:
 
 That way I don't have to type that <tt>require</tt> every time I get into <tt>script/console</tt> to troubleshoot a migration failure.
 
+You can set various environment variables to skip parts of the migration: DONT_MIGRATE_DOCUMENTS, DONT_MIGRATE_TRACKERS, DONT_MIGRATE_FORUMS
+
 Some notes on the differences between the GForge and the Redmine object models:
 
 * GForge stores the user language setting as a foreign key into the <tt>supported_languages</tt> table.  Redmine stores it as a two letter string (e.g., 'en') in <tt>users.language</tt>.

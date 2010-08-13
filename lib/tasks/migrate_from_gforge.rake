@@ -77,7 +77,7 @@ namespace :redmine do
         document_group.documents.each do |gforge_document|
            showing_migrated_ids(gforge_document) { gforge_document.convert_to_redmine_document_in(document_category) }
         end
-      end
+      end unless ENV['DONT_MIGRATE_DOCUMENTS']
       gforge_group.artifact_group_lists.each do |artifact_group_list|
         project.trackers << Tracker.find_by_name(artifact_group_list.corresponding_redmine_tracker_name) unless project.trackers.find_by_name(artifact_group_list.corresponding_redmine_tracker_name)
         artifact_group_list.artifacts.each do |artifact|
@@ -95,7 +95,7 @@ namespace :redmine do
             showing_migrated_ids(artifact_history) { artifact_history.convert_to_redmine_journal_on(issue) }
           end
         end
-      end
+      end unless ENV['DONT_MIGRATE_TRACKERS']
       gforge_group.forum_groups.active.each do |forum_group|
         board = forum_group.convert_to_redmine_board_in(project)
         board_threads = {}
@@ -117,6 +117,13 @@ namespace :redmine do
         end
         forum_group.monitors.each do |monitor|
           showing_migrated_ids(monitor) { monitor.convert_to_redmine_watcher_on(board) }
+        end
+      end unless ENV['DONT_MIGRATE_FORUMS']
+      gforge_group.packages.each do |package|
+        package.releases.each do |release|
+          release.files.each do |file|
+            
+          end
         end
       end
     #end
