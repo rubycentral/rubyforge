@@ -329,6 +329,13 @@ module GForgeMigrate
     belongs_to :release, :class_name => "GForgeRelease", :foreign_key => 'release_id'
     #belongs_to :file_type, :foreign_key => 'type_id'
     #belongs_to :processor
+    def convert_to_redmine_attachment_to(project)
+      attachment = Attachment.new(
+        :filename => filename,
+        :disk_filename => "#{project.unix_group_name}/#{filename}"
+        
+      )
+    end
   end
   
   # I experimented with memoizing this method, but it actually slowed the migration down

@@ -122,7 +122,7 @@ namespace :redmine do
       gforge_group.packages.each do |package|
         package.releases.each do |release|
           release.files.each do |file|
-            
+            showing_migrated_ids(file) { file.convert_to_redmine_attachment_to(project) }
           end
         end
       end
